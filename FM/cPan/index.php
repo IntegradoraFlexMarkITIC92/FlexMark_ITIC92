@@ -1,7 +1,7 @@
 <?php 
 error_reporting(0);
 session_start();
-//include("requiere/conn.php");
+include("../requiere/conn.php");
 include("../requiere/consultas.php");
 
 if($_REQUEST["conn"]=="now"){
@@ -50,7 +50,7 @@ if (($_SESSION["logged_almacen"])){
     <script src="../include/js/ie-emulation-modes-warning.js"></script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../include/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="../include/js/ie10-viewport-bug-workaround.js"></script>    
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -66,7 +66,17 @@ if (($_SESSION["logged_almacen"])){
       <form class="form-signin" role="form" name='login'>
         <h2 class="form-signin-heading">
           <center>
-            <img src="/FM/include/img/logoID1.jpg" height="55%" width="60%"><br><br>
+            <?php
+              $conEmp= mysql_query("SELECT idConfiguracion FROM empresa WHERE idEmpresa='1'");
+              while ($infoEmp=mysql_fetch_array($conEmp)) {
+                $idConfiguracion=$infoEmp["idConfiguracion"];
+                $conConf=mysql_query("SELECT logo FROM confgral WHERE idConfiguracion='$idConfiguracion'");
+                while ($infoConf=mysql_fetch_array($conConf)) {
+                  $ruta=$infoConf["logo"];
+                }
+              }
+            ?>
+            <img src=<?php echo('"/FM/'.$ruta.'"');?> height="55%" width="60%"><br><br>
             Acceso al Sistema
           </center>
         </h2>

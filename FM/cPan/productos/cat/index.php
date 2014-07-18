@@ -3,6 +3,7 @@ error_reporting(0);
 session_start();
 include("../../../requiere/consultas.php");
 include("../../../requiere/menus.php");
+include("../../../../requiere/layouts/layouts.php");
 
 if (!isset($_SESSION["logged_adm"])){
     die("<head>
@@ -19,29 +20,41 @@ if (!isset($_SESSION["logged_adm"])){
          session_destroy(); // destruyo la sesión 
            header("Location: /FM/cPan/");
    }
+
+   //if para saber el tipo de usuario
+  if($_SESSION["logged_adm"]==''){
+    if($_SESSION["logged_autori"]==''){
+      $idusu=$_SESSION["logged_user"];
+    }else{
+      $idusu=$_SESSION["logged_autori"];
+    }
+  }else{
+    $idusu=$_SESSION["logged_adm"];           
+  }
+  //TERMINA if para saber tipo de usuario
    
-   if(!is_null($_REQUEST['nuevaCG']) && $_REQUEST['nuevaCG']=="ADD"){      
+   if(!is_null($_REQUEST['nuevaCat']) && $_REQUEST['nuevaCat']=="ADD"){      
       //Llamo la funcion de actualizar            
-      $logo=$_REQUEST['logo'];
-      $title=$_REQUEST['titlee'];
-      $iva=$_REQUEST['iva'];
+      $nombre=$_REQUEST['nombre'];
+      $cat=$_REQUEST['nivelCategoria'];
+      $catPadre=$_REQUEST['catPadre'];
            
-      addConfGral($logo,$title,$iva);
+      addCate($nombre,$cat,$catPadre);
 
     }
 
     if(!is_null($_REQUEST['STATUS']) && $_REQUEST['STATUS']!="" && !is_null($_REQUEST['IDE']) && $_REQUEST['IDE']!=""){      
-      cambiarStatusConf($_REQUEST['IDE'],$_REQUEST['STATUS']);
+      cambiarStatusCat($_REQUEST['IDE'],$_REQUEST['STATUS']);
     }
 
-    if(!is_null($_REQUEST['updateCG']) && $_REQUEST['updateCG']=="update"){      
+    if(!is_null($_REQUEST['updCat']) && $_REQUEST['updCat']=="update"){      
       //Llamo la funcion de actualizar            
-      $logo=$_REQUEST['logo'];
-      $title=$_REQUEST['titlee'];
-      $iva=$_REQUEST['iva'];
+      $nombre=$_REQUEST['nombre'];
+      $cat=$_REQUEST['nivelCategoria'];
+      $catPadre=$_REQUEST['catPadre'];
       $id=$_REQUEST['updateID'];
-      
-      updateConfG($id,$logo,$title,$iva);
+           
+      updCate($id,$nombre,$cat,$catPadre);
 
     }
 
@@ -79,6 +92,24 @@ if (!isset($_SESSION["logged_adm"])){
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/FM/include/js/ie10-viewport-bug-workaround.js"></script>
 
+    <script type="text/javascript" src="/FM/js/jquery.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#x").change(function(){
+          //alert($("#x").val());
+          if($("#x").val()==2){
+            $("#categoriasPadre").fadeIn('fast')
+            //alert("Aparece");
+          }else{
+            $("#categoriasPadre").fadeOut('fast')
+          }
+        });
+
+
+        
+      });
+    </script>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -103,6 +134,8 @@ if (!isset($_SESSION["logged_adm"])){
       		<th>Tipo</th>      		      		
       		<th>Cat. Superior</th>          
           <th>Status</th>
+          <th>Modificar</th>
+          <th>Baja</th>
     		</tr>
   		</thead>
   		
@@ -110,14 +143,20 @@ if (!isset($_SESSION["logged_adm"])){
 		</table>
 	</div>
 	<!--Termina Tabla responsive-->
-	<a href='index.php?ADD=true'><button class="btn btn-primary">Nueva Config</button></a>
+	<a href='index.php?ADD=true'><button class="btn btn-primary">Nueva</button></a>
+
+<!-- Small modal -->
+<button class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Open</button>
+
+
+
 	<!-- Aqui va el formulario -->
     <?php 
     if(!is_null($_REQUEST['ADD']) && $_REQUEST['ADD']=="true"){
       // Aqui va la funcion..
-        displayNewConf();
+        displayNewCat();
     }else if (!is_null($_REQUEST['ID'])) {
-        displayUpdateCG($_REQUEST['ID']);
+        displayUpdCat($_REQUEST['ID']);
     }
 
     ?>

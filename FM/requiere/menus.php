@@ -1,4 +1,5 @@
 <?php
+include("conn.php"); 
 //  ================= Funcion que crea el menu Administrativo =========================
 function menuAdmin(){ ?>	
 
@@ -10,8 +11,18 @@ function menuAdmin(){ ?>
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
-	          </button>
-	          <a class="navbar-brand" href="#"><img src="/FM/include/img/logoID1.jpg" height="120%" width="100%"></a>
+	          </button> 
+	          <?php 
+	          $conEmp= mysql_query("SELECT idConfiguracion FROM empresa WHERE idEmpresa='1'");
+			  while ($infoEmp=mysql_fetch_array($conEmp)) {
+			  	$idConfiguracion=$infoEmp["idConfiguracion"];
+			  	$conConf=mysql_query("SELECT logo FROM confgral WHERE idConfiguracion='$idConfiguracion'");
+			  	while ($infoConf=mysql_fetch_array($conConf)) {
+			  		$ruta=$infoConf["logo"];
+			  	}
+			  }
+	          ?>
+	          <a class="navbar-brand" href="#"><img src=<?php echo('"/FM/'.$ruta.'"');?> height="120%" width="100%"></a>
 	        </div>
 	        <div class="navbar-collapse collapse">
 	          <ul class="nav navbar-nav"><li><a href="#">Inicio</a></li>

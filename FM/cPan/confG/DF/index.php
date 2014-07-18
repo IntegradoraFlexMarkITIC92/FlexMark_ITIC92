@@ -113,6 +113,8 @@ if (!isset($_SESSION["logged_adm"])){
           <th>Estado</th>
           <th>Pais</th>
           <th>Status</th>
+          <th>Modificar</th>
+          <th>Baja</th>
     		</tr>
   		</thead>
   		

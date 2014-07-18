@@ -21,8 +21,8 @@ if (!isset($_SESSION["logged_adm"])){
    }
    
    if(!is_null($_REQUEST['nuevaCG']) && $_REQUEST['nuevaCG']=="ADD"){      
-      //Llamo la funcion de actualizar            
-      $logo=$_REQUEST['logo'];
+      //Llam2o la funcion de actualizar            
+      $logo='NULL' ;
       $title=$_REQUEST['titlee'];
       $iva=$_REQUEST['iva'];
            
@@ -34,16 +34,45 @@ if (!isset($_SESSION["logged_adm"])){
       cambiarStatusConf($_REQUEST['IDE'],$_REQUEST['STATUS']);
     }
 
-    if(!is_null($_REQUEST['updateCG']) && $_REQUEST['updateCG']=="update"){      
-      //Llamo la funcion de actualizar            
-      $logo=$_REQUEST['logo'];
+    if(!is_null($_REQUEST['updateCG']) && $_REQUEST['updateCG']=="update"){    
+      //Llamo la funcion de actualizar 
       $title=$_REQUEST['titlee'];
       $iva=$_REQUEST['iva'];
-      $id=$_REQUEST['updateID'];
+      $id=$_REQUEST['updateID'];           
       
-      updateConfG($id,$logo,$title,$iva);
+      updateConfG($id,$title,$iva);
 
     }
+
+    if ($_POST["action"] == "upload") {
+      $id=$_REQUEST['imgID'];
+      $tamano = $_FILES["archivo"]['size'];
+      $tipo = $_FILES["archivo"]['type'];
+      $archivo = $_FILES["archivo"]['name'];
+      $trozos = explode(".", $archivo); 
+      $extension = end($trozos);
+      if ($archivo != "") {
+        
+        $dirDown="../../../";
+        $dirID="imgUpload/imgLogos/".$id."/";
+        
+        $dirValidar=$dirDown."".$dirID;                
+        
+        if(!is_dir($dirValidar)){
+          mkdir($dirValidar, 0700);
+        }
+
+        $nombreArchivo="imgLogo_ID".$id.".".$extension;
+
+
+        $destinocompleto=$dirValidar."".$nombreArchivo;
+        copy($_FILES['archivo']['tmp_name'], $destinocompleto);
+
+        $destinoBD=$dirID.$nombreArchivo;
+        updateDirLogo($id,$destinoBD);
+      }
+    }
+
 
 
 }
@@ -79,6 +108,10 @@ if (!isset($_SESSION["logged_adm"])){
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/FM/include/js/ie10-viewport-bug-workaround.js"></script>
 
+    <script type="text/javascript" src="/FM/js/jquery.js"></script>
+    <script type="text/javascript" src="/FM/js/bootstrap-filestyle.min.js"> </script>
+
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -103,6 +136,9 @@ if (!isset($_SESSION["logged_adm"])){
       		<th>Title</th>      		      		
       		<th>IVA</th>          
           <th>Status</th>
+          <th>Logo</th>
+          <th>Modificar</th>
+          <th>Baja</th>
     		</tr>
   		</thead>
   		
@@ -118,7 +154,12 @@ if (!isset($_SESSION["logged_adm"])){
         displayNewConf();
     }else if (!is_null($_REQUEST['ID'])) {
         displayUpdateCG($_REQUEST['ID']);
+        
     }
+
+    if (!is_null($_REQUEST['imgID'])) {
+        displayImgUpload();
+    }    
 
     ?>
     </div> <!-- /container -->

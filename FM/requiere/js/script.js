@@ -1,5 +1,6 @@
 // script.js para la validacion
-//Login Admin
+
+/*  ====================   Login Admin  ====================   */
 function validar(){
 	var error="";
 	var form=document.login;
@@ -12,6 +13,9 @@ function validar(){
 			form.submit();
 	}
 }
+
+
+/*  ====================   Validacion Empresas  ====================   */
 
 function update(){
 	var error="";
@@ -26,7 +30,7 @@ function update(){
 	}
 }
 
-//Funcion para agregar una empresa para facturacion
+/*  ====================   Validacion para agregar una empresa de facturacion ====================   */
 function addRS(){
 	var error="";
 	var form=document.formNueva;
@@ -44,7 +48,7 @@ function addRS(){
 }	
 
 
-//Funcion para actualizar una empresa para facturacion
+/*  ====================   Validacion para actualizar una empresa de facturacion ====================   */
 function updateRSo(){
 	var error="";
 	var form=document.formUpdate;
@@ -61,12 +65,12 @@ function updateRSo(){
 	}
 }	
 
-//Funcion para agregar una nueva configuracion
+/*  ====================   Validacion para agregar una configuracion  ====================   */
 function addConf(){
 	var error="";
 	var form=document.formNuevaConf;
 
-	if(form.logo.value=="" || form.titlee.value=="" || form.iva.value==""){
+	if(form.titlee.value=="" || form.iva.value==""){
 		error+="\n -Proporcionar Datos";
 	}
 
@@ -78,12 +82,12 @@ function addConf(){
 	}
 }
 
-//Funcion para actualizar una configuracion general
+/*  ====================   Validacion para actualizar una configuracion  ====================   */
 function updateConG(){
 	var error="";
-	var form=document.formUpdateConf;
+	var form=document.formUpdCG;
 
-	if(form.logo.value=="" || form.titlee.value=="" || form.iva.value==""){
+	if(form.titlee.value=="" || form.iva.value==""){
 		error+="\n -Proporcionar Datos";
 	}
 
@@ -93,28 +97,48 @@ function updateConG(){
 	}else{
 		alert(error);
 	}
-}
+}	
 
-/////////////////////////////////////////////////////////////////////////Administracion usuarios Polanco ////////////////////////////////////////
 
-//Funcion para actualizar informacion de empleados
-function updateEmple(){
+/*  ====================   Validacion para agregar una categoria  ====================   */
+function addCategoria(){
 	var error="";
-	var form=document.formUpdateEmpl;
+	var form=document.formNuevaCat;
 
-	if(form.nombre.value=="" || form.apellido.value=="" || form.user.value=="" || form.pass.value=="" || form.idDepto.value=="" || form.idNivel.value=="" || form.apellido.value=="idEmpresa"){
-		error+="\n -Proporcionar Datos Del Empleado";
+	if(form.nombre.value=="" || form.nivelCategoria.value=="" || form.catPadre.value==""){
+		error+="\n -Proporcionar Datos";
 	}
 
 	if(error==""){		
-		form.updateEM.value="updateEM";
+		form.nuevaCat.value="ADD";
 		form.submit();
 	}else{
 		alert(error);
 	}
 }
 
-//Funcion para agregar a un empleado
+/*  ====================   Validacion para actualizar una categoria  ====================   */
+
+function updCategoria(){
+	var error="";
+	var form=document.formUpdCat;
+
+	if(form.nombre.value=="" || form.nivelCategoria.value=="" || form.catPadre.value==""){
+		error+="\n -Proporcionar Datos";
+	}
+
+	if(error==""){		
+		form.updCat.value="update";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+
+///////////////////////////////////////Administracion usuarios Polanco ////////////////////////////////////////
+
+/*  ====================   Validacion para agregar un empleado  ====================   */
 function addConfEmpleado(){
 	var error="";
 	var form=document.formNuevoEmpleado;
@@ -131,7 +155,43 @@ function addConfEmpleado(){
 	}
 }
 
-//Valida datos del update departamento
+
+/*  ====================   Validacion para actualizar un empleado  ====================   */
+function updateEmple(){
+	var error="";
+	var form=document.formUpdateEmpl;
+
+	if(form.nombre.value=="" || form.apellido.value=="" || form.user.value=="" || form.pass.value=="" || form.idDepto.value=="" || form.idNivel.value=="" || form.apellido.value=="idEmpresa"){
+		error+="\n -Proporcionar Datos Del Empleado";
+	}
+
+	if(error==""){		
+		form.updateEM.value="updateEM";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+/*  ====================   Validacion para agregar un departamento  ====================   */
+function addConfDepartamento(){
+	var error="";
+	var form=document.formNuevoDepartamento;
+
+	if(form.nombre.value==""){
+		error+="\n -Proporcionar Datos Del Departamento";
+	}
+
+	if(error==""){		
+		form.nuevaDepto.value="ADD";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+
+/*  ====================   Validacion para actualizar un departamento  ====================   */
 function updateDepar(){
 var error="";
 var form=document.formUpdateDepartamento;
@@ -150,44 +210,7 @@ if(form.nombre.value==""){
 }	
 
 
-//Valida datos del insert departamento
-function addConfDepartamento(){
-	var error="";
-	var form=document.formNuevoDepartamento;
-
-	if(form.nombre.value==""){
-		error+="\n -Proporcionar Datos Del Departamento";
-	}
-
-	if(error==""){		
-		form.nuevaDepto.value="ADD";
-		form.submit();
-	}else{
-		alert(error);
-	}
-}
-
-
-//Valida datos del update Nivel
-function updateNive(){
-var error="";
-var form=document.formUpdateNiveles;
-
-if(form.nombre.value==""){
-		error+="\n -Proporcionar Datos Del Nivel";
-	}
-
-	if(error==""){		
-		form.updateNI.value="updateNI";
-		form.submit();
-	}else{
-		alert(error);
-	}
-
-}
-
-
-//Valida datos del Insert Niveles
+/*  ====================   Validacion para agregar un nivel  ====================   */
 function addConfNiveles(){
 	var error="";
 	var form=document.formNuevoNiveles;
@@ -204,4 +227,20 @@ function addConfNiveles(){
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////Administracion usuarios Polanco ////////////////////////////////////////	
+/*  ====================   Validacion para actualizar un nivel  ====================   */
+function updateNive(){
+var error="";
+var form=document.formUpdateNiveles;
+
+if(form.nombre.value==""){
+		error+="\n -Proporcionar Datos Del Nivel";
+	}
+
+	if(error==""){		
+		form.updateNI.value="updateNI";
+		form.submit();
+	}else{
+		alert(error);
+	}
+
+}

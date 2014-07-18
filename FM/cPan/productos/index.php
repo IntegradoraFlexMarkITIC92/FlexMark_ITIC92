@@ -1,8 +1,8 @@
 <?php 
 error_reporting(0);
 session_start();
-include("../../../requiere/consultas.php");
-include("../../../requiere/menus.php");
+include("../../requiere/consultas.php");
+include("../../requiere/menus.php");
 
 if (!isset($_SESSION["logged_adm"])){
     die("<head>
@@ -20,28 +20,34 @@ if (!isset($_SESSION["logged_adm"])){
            header("Location: /FM/cPan/");
    }
    
-   if(!is_null($_REQUEST['nuevaCG']) && $_REQUEST['nuevaCG']=="ADD"){      
+   if(!is_null($_REQUEST['nuevaRS']) && $_REQUEST['nuevaRS']=="ADD"){      
       //Llamo la funcion de actualizar            
-      $logo=$_REQUEST['logo'];
-      $title=$_REQUEST['titlee'];
-      $iva=$_REQUEST['iva'];
-           
-      addConfGral($logo,$title,$iva);
+      $rz=$_REQUEST['razonSocial'];
+      $rfc=$_REQUEST['rfc'];
+      $dir=$_REQUEST['direccion'];
+      $cp=$_REQUEST['cp'];
+      $municipio=$_REQUEST['municipio'];
+      $estado=$_REQUEST['estadosList'];
+      
+      addEmpresaFactuacion($rz,$rfc,$dir,$cp,$municipio,$estado);
 
     }
 
     if(!is_null($_REQUEST['STATUS']) && $_REQUEST['STATUS']!="" && !is_null($_REQUEST['IDE']) && $_REQUEST['IDE']!=""){      
-      cambiarStatusConf($_REQUEST['IDE'],$_REQUEST['STATUS']);
+      cambiarStatusPro($_REQUEST['IDE'],$_REQUEST['STATUS']);
     }
 
-    if(!is_null($_REQUEST['updateCG']) && $_REQUEST['updateCG']=="update"){      
+    if(!is_null($_REQUEST['updateRS']) && $_REQUEST['updateRS']=="update"){      
       //Llamo la funcion de actualizar            
-      $logo=$_REQUEST['logo'];
-      $title=$_REQUEST['titlee'];
-      $iva=$_REQUEST['iva'];
+      $rz=$_REQUEST['razonSocial'];
+      $rfc=$_REQUEST['rfc'];
+      $dir=$_REQUEST['direccion'];
+      $cp=$_REQUEST['cp'];
+      $municipio=$_REQUEST['municipio'];
+      $estado=$_REQUEST['estadosList'];
       $id=$_REQUEST['updateID'];
       
-      updateConfG($id,$logo,$title,$iva);
+      updateEmpresaFactuacion($id,$rz,$rfc,$dir,$cp,$municipio,$estado);
 
     }
 
@@ -79,11 +85,13 @@ if (!isset($_SESSION["logged_adm"])){
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/FM/include/js/ie10-viewport-bug-workaround.js"></script>
 
+    <script type="text/javascript" src="/FM/js/jquery.js"></script>    
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    [endif]-->
   </head>
 
   <body role="document">
@@ -91,7 +99,7 @@ if (!isset($_SESSION["logged_adm"])){
 	<!--Inicia el contenido de la web de administrador-->
     <div class="container theme-showcase" role="main">	 
 
-  <h1>Configuracion General de la Aplicacion</h1>    
+  <h1>Administracion de Productos</h1>    
   <br>
 	<!-- Inicia Tabla responsive-->
 	<div class="table-responsive">
@@ -99,25 +107,30 @@ if (!isset($_SESSION["logged_adm"])){
   		<thead>
     		<tr>
       		<!--<th>ID</th>-->
-      		<th>Ruta Logo</th>
-      		<th>Title</th>      		      		
-      		<th>IVA</th>          
+      		<th>Descripcion</th>
+      		<th>Existencia</th>      		      		
+      		<th>Precio</th>
+          <th>Precio Medio</th>      		
+      		<th>Precio Mayoreo</th>          
           <th>Status</th>
+          <th>Imagenes</th>
+          <th>Modificar</th>
+          <th>Baja</th>          
     		</tr>
   		</thead>
   		
-        <?php infoTablaConfG();  ?>  		  
+        <?php infoTablaPrdocutos();  ?>  		  
 		</table>
 	</div>
 	<!--Termina Tabla responsive-->
-	<a href='index.php?ADD=true'><button class="btn btn-primary">Nueva Config</button></a>
+	<a href='index.php?ADD=true'><button class="btn btn-primary">Nuevo Producto</button></a>
 	<!-- Aqui va el formulario -->
     <?php 
     if(!is_null($_REQUEST['ADD']) && $_REQUEST['ADD']=="true"){
       // Aqui va la funcion..
-        displayNewConf();
+        displayNewPro();
     }else if (!is_null($_REQUEST['ID'])) {
-        displayUpdateCG($_REQUEST['ID']);
+        displayUpdPro($_REQUEST['ID']);
     }
 
     ?>
