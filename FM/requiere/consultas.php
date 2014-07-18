@@ -316,4 +316,257 @@ function infoTablaCat(){
 }
 
 
+######################################################################### Polanco Administracion usuarios########################
+
+###Empleados###
+
+//insertamos en la base de datos (1)
+function addConfEmpleado($nombre,$apellido,$user,$pass,$status,$idDepto,$idNivel,$idEmpresa){
+	$consulta=("insert into empleado value (0,'$nombre','$apellido','$user','$pass','A','$idDepto','$idNivel','$idEmpresa')");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");
+	#echo($consulta);
+}
+
+//Formulario Agrega un nuevo empleado (2)
+		function displayNewEmpleado(){
+	echo('<form role="form" name="formNuevoEmpleado" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Nuevo Empleado</h3>');
+		
+		echo('<input type="text" name="nombre" placeholder="Nombre Usuario" class="form-control" ><br>
+		<input type="text" name="apellido" placeholder="Apellido Usuario" class="form-control" ><br>
+		<input type="text" name="user" placeholder="Usuario" class="form-control" ><br>
+		<input type="password" name="pass" placeholder="Password" class="form-control" ><br>
+		<input type="text" name="idDepto" placeholder="Departamento" class="form-control" ><br>
+		<input type="text" name="idNivel" placeholder="Nivel De Usuario" class="form-control" ><br>
+		<input type="text" name="idEmpresa" placeholder="Empresa" class="form-control" ><br>
+		<input type="hidden" name="nuevaEM" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addConfEmpleado()">Agregar</button>');
+
+	    echo('</form>	');
+}
+
+//Cambiar el estatus del empleado de activo a inactivo o de inactivo a activo (3)
+	function cambiarStatusEmple ($idEmpl, $statusEmp){
+	$consultaEmp=("update empleado set status='$statusEmp' where idEmpleado='$idEmpl'");
+	@mysql_query($consultaEmp) or die ("No se puede ejecutar la consulta".$consultaEmp);
+	header("Location: ./index.php");
+}
+
+//Funcion para actualizar la configuracion del objeto empleado (4)
+	function updateEmpl($idEmpl,$nombre,$apellido,$user,$pass,$statusEmp,$idDepto,$idNivel,$idEmpresa){
+	$consultaEmp=("update empleado set nombre='$nombre', apellido='$apellido', user='$user', pass='$pass', status='A', idDepto='$idDepto', idNivel='$idNivel', idEmpresa='$idEmpresa' WHERE idEmpleado='$idEmpl'");
+	@mysql_query($consultaEmp)or die ("No se puede ejecutar la accion".$consultaEmp);
+	header("Location: ./index.php");
+	#echo($consultaEmp);
+}
+
+//Funcion para el formulario donde se actualiza la configuracion del empleado (5)
+	function displayUpdateEmple($idEm){
+	echo('<form role="form" name="formUpdateEmpl" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Editar Empleado</h3>');
+		$conEmpl= mysql_query("SELECT * FROM empleado WHERE idEmpleado='$idEm'");
+		while ($infoEmpl=mysql_fetch_array($conEmpl)) {
+
+			echo('<input type="text" name="nombre" placeholder="Nombre empleado" class="form-control" value="'.$infoEmpl["nombre"].'"><br>
+			<input type="text" name="apellido" placeholder="Apellido empleado" class="form-control" value="'.$infoEmpl["apellido"].'"><br>
+			<input type="text" name="user" placeholder="Usuario empleado" class="form-control" value="'.$infoEmpl["user"].'"><br>
+			<input type="password" name="pass" placeholder="Password empleado" class="form-control" value="'.$infoEmpl["pass"].'"><br>
+			<input type="text" name="idDepto" placeholder="Departamento usuario" class="form-control" value="'.$infoEmpl["idDepto"].'"><br>
+			<input type="text" name="idNivel" placeholder="Nivel usuario" class="form-control" value="'.$infoEmpl["idNivel"].'"><br>
+			<input type="text" name="idEmpresa" placeholder="Empresa usuario" class="form-control" value="'.$infoEmpl["idEmpresa"].'"><br>				
+			<input type="hidden" name="updateIdEm" value="'.$idEm.'">
+			<input type="hidden" name="updateEM" value="">');				
+
+		}
+
+		echo('<button class="btn btn-primary" onclick="updateEmple()">Actualizar</button>');
+
+	echo('</form>	');
+}
+
+//Consulta la base de datos para traer todos los datos que esta contiene (6)
+	function infoTablaEmpleado(){
+	$conEmpleado= mysql_query("SELECT * FROM empleado");
+	while ($infoEmpleado=mysql_fetch_array($conEmpleado)) {
+		echo('			
+			<tr>			   
+			   <td>'.$infoEmpleado["nombre"].'</td>
+			   <td>'.$infoEmpleado["apellido"].'</td>
+			   <td>'.$infoEmpleado["user"].'</td>			   
+			   <td>'.$infoEmpleado["pass"].'</td>
+			   <td>'.$infoEmpleado["status"].'</td>
+			   <td>'.$infoEmpleado["idDepto"].'</td>
+			   <td>'.$infoEmpleado["idNivel"].'</td>
+			   <td>'.$infoEmpleado["idEmpresa"].'</td>
+			   <td><a href="index.php?ID='.$infoEmpleado["idEmpleado"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoEmpleado["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoEmpleado["idEmpleado"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoEmpleado["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoEmpleado["idEmpleado"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}
+}
+
+###Empleados###
+
+###Departamentos###
+
+//Insertamos en la base de datos la informacion de la tabla deptoc(1)
+	function addConfDepartamento($nombre,$status){
+	$consulta=("insert into depto value (0,'$nombre','A')");
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir departamento".$consulta);
+	header("Location: ./index.php");
+	}
+	
+	//Formulario Agrega un nuevo Departamento (2)
+		function displayNewDepartamento(){
+	echo('<form role="form" name="formNuevoDepartamento" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Nuevo Departamento.</h3>');
+		
+		echo('<input type="text" name="nombre" placeholder="Nombre Usuario" class="form-control" ><br>
+		<input type="hidden" name="nuevaDepto" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addConfDepartamento()">Agregar</button>');
+
+	    echo('</form>	');
+}
+
+	//Cambiar el estatus del departamento de activo a inactivo o de inactivo a activo (3)
+	function cambiarStatusDepartamento ($idDep, $statusDep){
+	$consultaDepa=("update depto set status='$statusDep' where idDepto='$idDep'");
+	@mysql_query($consultaDepa) or die ("No se puede ejecutar la consulta".$consultaDepa);
+	header("Location: ./index.php");
+	}
+
+
+	//Funcion para actualizar la configuracion del objeto Departamento (4)
+	function updateDepartamento($idDep,$nombre,$statusDep){
+	$consultaDepa=("update depto set nombre='$nombre', status='A' WHERE idDepto='$idDep'");
+	@mysql_query($consultaDepa)or die ("No se puede ejecutar la accion".$consultaDepa);
+	header("Location: ./index.php");
+}
+
+//Funcion para el formulario donde se actualiza la configuracion del empleado (5)
+	function displayUpdateDepartamento($idDe){
+	echo('<form role="form" name="formUpdateDepartamento" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Editar Departamento.</h3>');
+		$conDepto= mysql_query("SELECT * FROM depto WHERE idDepto='$idDe'");
+		while ($infoDepto=mysql_fetch_array($conDepto)) {
+
+			echo('<input type="text" name="nombre" placeholder="Nombre Departamento" class="form-control" value="'.$infoDepto["nombre"].'"><br>				
+			<input type="hidden" name="updateIdDep" value="'.$idDe.'">
+			<input type="hidden" name="updateDE" value="">');				
+
+		}
+
+		echo('<button class="btn btn-primary" onclick="updateDepar()">Actualizar</button>');
+
+	echo('</form>	');
+}
+
+
+//Consulta la base de datos para traer toda la informacion de la tabla depto(6)
+	function infoTablaDepartamento(){
+	$conDepartamento= mysql_query("SELECT * FROM depto");
+	while ($infoDepartamento=mysql_fetch_array($conDepartamento)) {
+		echo('			
+			<tr>			   
+			   <td>'.$infoDepartamento["nombre"].'</td>
+			   <td>'.$infoDepartamento["status"].'</td>
+			   <td><a href="index.php?ID='.$infoDepartamento["idDepto"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoDepartamento["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoDepartamento["idDepto"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoDepartamento["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoDepartamento["idDepto"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}
+	}
+
+###Departamentos###
+
+
+###Niveles###
+
+//Insertamos en la base de datos la informacion de la tabla Niveles(1)
+	function addConfNiveles($nombre,$status){
+	$consulta=("insert into nivel value (0,'$nombre','A')");
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir departamento".$consulta);
+	header("Location: ./index.php");
+	}
+	
+	//Formulario Agrega un nuevo Niveles (2)
+		function displayNewNiveles(){
+	echo('<form role="form" name="formNuevoNiveles" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Nuevo Nivel.</h3>');
+		
+		echo('<input type="text" name="nombre" placeholder="Nombre Nivel" class="form-control" ><br>
+		<input type="hidden" name="nuevaNive" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addConfNiveles()">Agregar</button>');
+
+	    echo('</form>	');
+}
+
+	//Cambiar el estatus del Niveles de activo a inactivo o de inactivo a activo (3)
+	function cambiarStatusNiveles ($idNiv, $statusNiv){
+	$consultaDepa=("update nivel set status='$statusNiv' where idNivel='$idNiv'");
+	@mysql_query($consultaDepa) or die ("No se puede ejecutar la consulta".$consultaDepa);
+	header("Location: ./index.php");
+	}
+
+
+	//Funcion para actualizar la configuracion del objeto Niveles (4)
+	function updateNiveles($idNiv,$nombre,$statusNiv){
+	$consultaDepa=("update nivel set nombre='$nombre', status='A' WHERE idNivel='$idNiv'");
+	@mysql_query($consultaDepa)or die ("No se puede ejecutar la accion".$consultaDepa);
+	header("Location: ./index.php");
+}
+
+//Funcion para el formulario donde se actualiza la configuracion del Niveles (5)
+	function displayUpdateNiveles($idNi){
+	echo('<form role="form" name="formUpdateNiveles" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Editar Nivel.</h3>');
+		$conNiv= mysql_query("SELECT * FROM nivel WHERE idNivel='$idNi'");
+		while ($infoNivele=mysql_fetch_array($conNiv)) {
+
+			echo('<input type="text" name="nombre" placeholder="Nombre Departamento" class="form-control" value="'.$infoNivele["nombre"].'"><br>				
+			<input type="hidden" name="updateIdNiv" value="'.$idNi.'">
+			<input type="hidden" name="updateNI" value="">');				
+
+		}
+
+		echo('<button class="btn btn-primary" onclick="updateNive()">Actualizar</button>');
+
+	echo('</form>	');
+}
+
+
+//Consulta la base de datos para traer toda la informacion de la tabla Niveles(6)
+	function infoTablaNiveles(){
+	$conNiveles= mysql_query("SELECT * FROM nivel");
+	while ($infoNiveles=mysql_fetch_array($conNiveles)) {
+		echo('			
+			<tr>			   
+			   <td>'.$infoNiveles["nombre"].'</td>
+			   <td>'.$infoNiveles["status"].'</td>
+			   <td><a href="index.php?ID='.$infoNiveles["idNivel"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoNiveles["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoNiveles["idNivel"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoNiveles["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoNiveles["idNivel"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}
+	}
+
+###Niveles###
+
+######################################################################### Polanco Administracion usuarios########################
+
+
+
 ?>
