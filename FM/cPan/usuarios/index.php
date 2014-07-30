@@ -120,7 +120,7 @@ if (!isset($_SESSION["logged_adm"])){
     		</tr>
   		</thead>
   		
-        <?php infoTablaEmpleado();  ?>  		  
+        <?php infoTablaPaginar();  ?>  		  
 		</table>
 	</div>
 	<!--Termina Tabla responsive-->

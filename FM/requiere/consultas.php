@@ -1058,4 +1058,68 @@ function cambiarStatusCliente ($idCli, $statusClie){
 	header("Location: ./index.php");
 }
 
+/* ============================Prueba paginacion empleados ======================= */
+function infoTablaPaginar(){
+
+
+	//primero obtenemos el parametro que nos dice en que pagina estamos
+        $page = 1; //inicializamos la variable $page a 1 por default
+        if(array_key_exists('pg', $_GET)){
+            $page = $_GET['pg']; //si el valor pg existe en nuestra url, significa que estamos en una pagina en especifico.
+        }
+        //ahora que tenemos en que pagina estamos obtengamos los resultados:
+        // a) el numero de registros en la tabla
+        $mysqli = new mysqli("localhost","root","","flexmark");
+        if ($mysqli->connect_errno) {
+        printf("Connect failed: %s\n", $mysqli->connect_error);
+        exit();
+      }
+
+
+        $conteo_query =  $mysqli->query("SELECT COUNT(*) as conteo FROM empleado");
+        $conteo = "";
+        if($conteo_query){
+          while($obj = $conteo_query->fetch_object()){ 
+            $conteo =$obj->conteo; 
+          }
+        }
+        $conteo_query->close(); 
+        unset($obj); 
+        
+        //ahora dividimos el conteo por el numero de registros que queremos por pagina.
+        $max_num_paginas = intval($conteo/5); //en esto caso 5
+      
+        // ahora obtenemos el segmento paginado que corresponde a esta pagina
+        $segmento = $mysqli->query("SELECT *  FROM empleado LIMIT ".(($page-1)*5).", 5 ");
+
+        //ya tenemos el segmento, ahora le damos output.
+        
+  
+        if($segmento){
+          
+          while($obj2 = $segmento->fetch_object())
+          {
+             echo '<tr>
+                         <td>'.$obj2->nombre.'</td>
+                         <td>'.$obj2->apellido.'</td>
+                         <td>'.$obj2->user.'</td>
+                         <td>'.$obj2->pass.'</td>
+                         <td>'.$obj2->status.'</td>
+                         <td>'.$obj2->idDepto.'</td>
+                         <td>'.$obj2->idNivel.'</td>
+                         <td>'.$obj2->idEmpresa.'</td>
+                         <td><a href="index.php?ID='.$obj2->idCliente.'"><button type="button" class="btn btn-warning">Modificar</button></a></td>
+                         <td>faltabotonaltabaja</td>
+                         '; 
+          }
+          echo '<tr><br/><br/>';
+      }
+  
+        //ahora viene la parte importante, que es el paginado
+        //recordemos que $max_num_paginas fue previamente calculado.
+        for($i=0; $i<$max_num_paginas;$i++){
+           echo '<a href="prueba.php?pg='.($i+1).'">'.($i+1).'</a> | ';
+        }
+}
+
 ?>

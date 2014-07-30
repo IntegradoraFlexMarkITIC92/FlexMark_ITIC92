@@ -77,29 +77,43 @@ function showPromos(){
 /*  =======================================================================================   */
 /*  ====================  Funcion para realizar el login de back-end   ====================   */
 /*  =======================================================================================   */
-function login($user,$pass){	
-	$conUser= mysql_query("SELECT count(1) AS OK, idEmpleado, idNivel, nombre, apellido FROM empleado WHERE user='$user' AND pass='$pass' AND status='A' ");
-	while($logi=mysql_fetch_array($conUser)){
-		if($logi['OK']==1){
-			//echo("Se logeo ".$logi['nombre']." ".$logi['apellido']." con ID: ".$logi['idEmpleado']);
-			$op=$logi['idNivel'];
-			$idusu=$logi['idEmpleado'];
-
-			switch($op){				
-				case 1:$_SESSION["logged_adm"] = $idusu;
-						$parametro="index.php";	
-				break;
-
-				case 2:$_SESSION["logged_vtas"] = $idusu;
-						$parametro="index.php";	
-				break;
-
-				case 3:$_SESSION["logged_almacen"] = $idusu;
-						$parametro="index.php";	
-				break;
-			}			
+function login($user,$pass){			
+	$conClie= mysql_query("SELECT idCliente, count(1) as exist FROM cliente where user='$user' and pass='$pass' and status='A'");
+	while($logi=mysql_fetch_array($conClie)){		
+		if($logi['exist']==1){			
+			$idCliente=$logi['idCliente'];			
+			$_SESSION["logged_cliente"] = $idCliente;	
+			header("Location: /FM/index.php");
 		}else{
 			echo("Error de login");
 		}			
-	}	
+	}
+}
+
+/*  =======================================================================================   */
+/*  ======================  Funcion para agregar un cliente   =============================   */
+/*  =======================================================================================   */
+function displayNewClientes(){	
+	echo('<form role="form" name="formNuevoCliente" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Nuevo Cliente</h3>');
+
+		echo('<input type="text" name="nombre" placeholder="Nombre Usuario" class="form-control" ><br>
+		<input type="text" name="apellido" placeholder="Apellido Usuario" class="form-control" ><br>
+		<input type="text" name="titulo" placeholder="Titulo" class="form-control" ><br>
+		<input type="text" name="user" placeholder="Usuario" class="form-control" ><br>
+		<input type="password" name="pass" placeholder="Password" class="form-control" ><br>
+		<input type="hidden" name="nuevaCli" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addConfCliente()">Agregar</button>');
+
+	echo('</form>');
+}
+
+/*  =======================================================================================   */
+/*  ====================  Funcion para agregar un nuevo cliente   ========================   */
+/*  =======================================================================================   */
+function addConfCliente($nombre,$apellido,$titulo,$user,$pass){
+	$consulta=("insert into cliente value (0,'$nombre','$apellido','$titulo','$user','$pass','A')");
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");
 }
