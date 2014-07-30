@@ -135,6 +135,73 @@ function updCategoria(){
 	}
 }
 
+/*  ====================   Validacion para agregar un  producto  ====================   */
+function addPro(){
+	var error="";
+	var form=document.formNuevoPro;
+
+	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.noParte.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
+		error+="\n -Proporcionar Datos";
+	}
+
+	if(error==""){		
+		form.nuevoProd.value="ADD";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+/*  ====================   Validacion para actualizar un  producto  ====================   */
+function updPro(){
+	var error="";
+	var form=document.formNuevoPro;
+
+	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.noParte.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
+		error+="\n -Proporcionar Datos";
+	}
+
+	if(error==""){		
+		form.updProd.value="upd";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+/*  ====================   Validacion para agregar una promocion  ====================   */
+function addPromo(){
+	var error="";
+	var form=document.formNuevoPromo;
+
+	if(form.descCorta.value=="" || form.descripcion.value=="" || form.inicio.value=="" || form.fin.value=="" || form.producto.value==""){
+		error+="\n -Proporcionar Datos";
+	}
+
+	if(error==""){		
+		form.nuevaPromo.value="ADD";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+/*  ====================   Validacion para actualizar una  promocion  ====================   */
+function updPromo(){
+	var error="";
+	var form=document.formNuevoPro;
+
+	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.noParte.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
+		error+="\n -Proporcionar Datos";
+	}
+
+	if(error==""){		
+		form.updProd.value="upd";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
 
 ///////////////////////////////////////Administracion usuarios Polanco ////////////////////////////////////////
 
@@ -243,4 +310,38 @@ if(form.nombre.value==""){
 		alert(error);
 	}
 
+}
+
+/*  ====================   Validacion para agregar un cliente  ====================   */
+function addConfCliente(){
+	var error="";
+	var form=document.formNuevoCliente;
+
+	if(form.nombre.value=="" || form.apellido.value=="" || form.titulo.value=="" || form.user.value=="" || form.pass.value==""){
+		error+="\n -Proporcionar Datos Del Cliente";
+	}
+
+	if(error==""){		
+		form.nuevaCli.value="ADD";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}
+
+/*  ====================   Validacion para actualizar un Cliente  ====================   */
+function updateCliente(){
+	var error="";
+	var form=document.formUpdateClie;
+
+	if(form.nombre.value=="" || form.apellido.value=="" || form.titulo.value=="" || form.user.value=="" || form.pass.value==""){
+		error+="\n -Proporcionar Datos Del Cliente";
+	}
+
+	if(error==""){		
+		form.updateCli.value="updateCli";
+		form.submit();
+	}else{
+		alert(error);
+	}
 }

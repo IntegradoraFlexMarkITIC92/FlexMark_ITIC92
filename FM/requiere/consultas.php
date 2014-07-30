@@ -140,6 +140,11 @@ function actualizaEmpresa($nombreEmpresa,$direccionEmpresa,$razonSocialEmpresa){
 	header("Location: ./index.php");
 }
 
+function actualizaConfDefault($idConfD){	
+	$consulta=("UPDATE empresa SET idConfiguracion='$idConfD' WHERE idEmpresa='1'");
+	@mysql_query($consulta);	
+}
+
 /*  =======================================================================================   */
 /*  ====================  Tabla de empresas de facturacion   ====================   */
 /*  =======================================================================================   */
@@ -241,6 +246,7 @@ function cambiarStatus($idEF,$status){
 }
 
 
+
 /*  =======================================================================================   */
 /*  ====================  Tabla de configuracion general   ====================   */
 /*  =======================================================================================   */
@@ -300,9 +306,19 @@ function displayUpdateCG($idCG){
 			<input type="text" name="titlee" placeholder="Titulo en Navegador" class="form-control" value="'.$infoCG["title"].'"><br>
 			<input type="text" name="iva" placeholder="IVA de aplicacion" class="form-control" value="'.$infoCG["iva"].'"><br>			
 			<input type="hidden" name="updateID" value="'.$idCG.'">
-			<input type="hidden" name="updateCG" value="">');												
+			<input type="hidden" name="updateCG" value="">');	
+
+			$conDefault=mysql_query("SELECT idConfiguracion FROM empresa WHERE idEmpresa='1'");
+			if($idDefault=mysql_fetch_array($conDefault)){
+				if($idDefault["idConfiguracion"] == $infoCG["idConfiguracion"]){
+					echo('<input type="checkbox" checked="checked" name="idDefault" value=""> Configuracion por Default <br><br>');
+				}else{
+					echo('<input type="checkbox" name="idDefault" value=""> Configuracion por Default <br><br>');
+				}
+			}
+
 		}		
-		echo('<button class="btn btn-primary" onclick="updateConG()">Actualiza</button>');
+		echo('<button class="btn btn-primary" onclick="updateConG()">Actualizar</button>');
 	echo('</form>	');
 		 	
 }
@@ -398,6 +414,8 @@ function displayNewCat(){
 	    echo('</form>	');
 }
 
+
+
 /*  ====================  Funcion para agregar una nueva categoria de productos   ====================   */
 function addCate($nombre,$cat,$catPadre){
 	$consulta=("insert into categoria value (0,'$nombre','$cat','$catPadre','A')");
@@ -477,7 +495,7 @@ function infoTablaPrdocutos(){
 			   <td>'.$infoPro["precioMedioMayoreo"].'</td>				   
 			   <td>'.$infoPro["precioMayoreo"].'</td>
 			   <td>'.$infoPro["status"].'</td>');
-			   echo('<td><button type="button" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-sm">Subir</button></td>');			   
+			   echo('<td><a href="index.php?imgID='.$infoPro["idProducto"].'"><button type="button" class="btn btn-success">Subir</button></a></td>');			   
 			   echo('<td><a href="index.php?ID='.$infoPro["idProducto"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
 		if($infoPro["status"]=="A"){
 			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoPro["idProducto"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
@@ -501,18 +519,33 @@ function displayNewPro(){
 		<input type="text" name="rangoMM" placeholder="Rango Medio Mayoreo" class="form-control" ><br>
 		<input type="text" name="precioMM" placeholder="Precio Medio Mayoreo" class="form-control" ><br>
 		<input type="text" name="rangoMayoreo" placeholder="Rango Mayoreo" class="form-control" ><br>
-		<input type="text" name="precioMayoreo" placeholder="Precio Mayoreo" class="form-control" ><br>
-		<input type="checkbox" name="iva" value=""> Exento de IVA <br><br>
-		<input type="hidden" name="nuevoProd" value="">');
+		<input type="text" name="precioMayoreo" placeholder="Precio Mayoreo" class="form-control" ><br>');
+		$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1' ");
+		echo('<select name="categoriaPadre" id="categoriaPadre" class="form-control">
+		<option selected="selected" value="0">Seleccione.. </option>');
+		while ($infoCat=mysql_fetch_array($conCat)) {			
+			    echo('<option value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+		}
+		echo('</select><br>');	
+		echo('<select name="subCategoria" id="subCategoria" class="form-control">
+			 <option selected="selected" value="">Seleccione..</option>
+			 </select>
+			 <br>');	
+		echo('<input type="checkbox" name="iva" value=""> Exento de IVA <br><br>
+		<input type="hidden" name="nuevoProd" value="">');				
 
-		echo('<button class="btn btn-primary" onclick="addProd()">Agregar</button>');
+		echo('<button class="btn btn-primary" onclick="addPro()">Agregar</button>');
 
 	    echo('</form>	');
 }
 
 /*  ====================  Funcion para agregar un nuevo producto   ====================   */
 
-
+function addProducto($descCorta,$desc,$parte,$precio,$exist,$rMM,$pMM,$rM,$pM,$subCat,$iva,$idusu){	
+	$consulta=("insert into producto value (0,'$desc','$descCorta','NULL','$parte','$precio','$exist','$iva','$rMM','$pMM','$rM','$pM','A','$subCat','$idusu')");	
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");
+}
 
 
 /*  ====================  Formulario para editar los datos de un nuevo producto   ====================   */
@@ -529,17 +562,34 @@ function displayUpdPro($idPro){
 			<input type="text" name="rangoMM" value="'.$infoProd["rangoMedioMayoreo"].'" placeholder="Rango Medio Mayoreo" class="form-control" ><br>
 			<input type="text" name="precioMM" value="'.$infoProd["precioMedioMayoreo"].'" placeholder="Precio Medio Mayoreo" class="form-control" ><br>
 			<input type="text" name="rangoMayoreo" value="'.$infoProd["rangoMayoreo"].'" placeholder="Rango Mayoreo" class="form-control" ><br>
-			<input type="text" name="precioMayoreo" value="'.$infoProd["precioMayoreo"].'" placeholder="Precio Mayoreo" class="form-control" ><br>
-			<input type="checkbox" name="iva" value="'.$infoProd["exentoIVA"].'"> Exento de IVA <br><br>
-			<input type="hidden" name="nuevoProd" value="">');
-			echo('<input type="hidden" name="updateID" value="'.$infoProd[""].'">');
+			<input type="text" name="precioMayoreo" value="'.$infoProd["precioMayoreo"].'" placeholder="Precio Mayoreo" class="form-control" ><br>');
+			$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1'");
+			echo('<select name="categoriaPadre" id="categoriaPadre" class="form-control">
+			<option selected="selected" value="0">Seleccione.. </option>');
+			while ($infoCat=mysql_fetch_array($conCat)) {			
+				    echo('<option value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+			}
+			echo('</select><br>');	
+			if($infoProd["exentoIVA"]=="S"){
+				echo('<input type="checkbox" name="iva" checked="checked" value="'.$infoProd["exentoIVA"].'"> Exento de IVA <br><br>');
+			}else{
+				echo('<input type="checkbox" name="iva" value="'.$infoProd["exentoIVA"].'"> Exento de IVA <br><br>');
+			}
+			echo('<input type="hidden" name="updProd" value="">');
+			echo('<input type="hidden" name="updateID" value="'.$infoProd["idProducto"].'">');
 		}
-		echo('<button class="btn btn-primary" onclick="addProd()">Agregar</button>');
+		echo('<button class="btn btn-primary" onclick="updPro()">Actualizar</button>');
 
 	    echo('</form>	');
 }
 
 /*  ====================  Funcion para actualizar en la BD la informacion de un producto    ====================   */
+function updProducto($descCorta,$desc,$parte,$precio,$exist,$rMM,$pMM,$rM,$pM,$subCat,$iva,$idProd){	
+	$consulta=("update set descripcion='$desc', descripcionCorta='$descCorta', noParte='$parte', precio='$precio', existencia='$exist',exentoIVA='$iva', rangoMedioMayoreo='$rMM', precioMedioMayoreo='$pMM', rangoMayoreo='$rM',precioMayoreo='$pM', idCategoria='$subCat' WHERE idProducto='$idProd')");	
+	echo $consulta;
+	#@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	#header("Location: ./index.php");
+}
 
 
 
@@ -548,6 +598,140 @@ function cambiarStatusPro($idEF,$status){
 	$consulta=("update producto set status='$status' where idProducto='$idEF'");
 	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
 	header("Location: ./index.php");	
+}
+
+/*  ====================  Formulario para subir el imagenes de los productos   ====================   */
+
+function displayImgUploadProductos(){
+
+	echo('<form role="form" name="upload" id="upload" action="" method="post" enctype="multipart/form-data" style="width:400px; margin: 0 auto;">');
+	echo('
+		<!-- <input type="file" class="filestyle" data-input="false"> -->
+		<input mutliple="true" name="archivos[]" id="archivo" type="file" class="filestyle" data-buttonName="btn-primary">						
+		<div id="moreInputs">
+
+		</div>
+		<input name="mas" class="btn btn-success" id="mas" value="Agregar otra.." /><br><br>
+		<input name="enviar" class="btn btn-primary" type="submit" id="enviar" value="Upload File" />
+		<input name="action" type="hidden" value="upload">
+		');
+	echo("</form>");
+
+}
+
+/*  =======================================================================================   */
+/*  ====================  Tabla de promociones   ====================   */
+/*  =======================================================================================   */
+function infoTablaPromociones(){
+
+	$conPROMO= mysql_query("SELECT * FROM promocion");
+	while ($infoPromo=mysql_fetch_array($conPROMO)) {
+		echo('			
+			<tr>			   			
+			   <td>'.$infoPromo["descripcion"].'</td>
+			   <td>'.$infoPromo["img"].'</td>
+			   <td>'.$infoPromo["inicio"].'</td>
+			   <td>'.$infoPromo["idProducto"].'</td>				   
+			   <td>'.$infoPromo["fin"].'</td>
+			   <td>'.$infoPromo["status"].'</td>');
+			   echo('<td><a href="index.php?imgID='.$infoPromo["idPromocion"].'"><button type="button" class="btn btn-success">Subir</button></a></td>');			   
+			   echo('<td><a href="index.php?ID='.$infoPromo["idPromocion"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoPromo["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoPromo["idPromocion"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoPromo["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoPromo["idPromocion"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}	
+}
+
+
+/*  ====================  Formulario para un nueva promocion   ====================   */
+function displayNewPromo(){
+	echo('<form role="form" name="formNuevoPromo" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Nueva Promocion</h3>');
+
+		echo('<input type="text" name="descripcion" placeholder="Titulo Principal" class="form-control" ><br>
+		<textarea name="descCorta" placeholder="Descripcion secundaria" class="form-control"></textarea><br>					
+		<div class="hero-unit">
+        	<input type="text" name="inicio" class="form-control" placeholder="Inicio de la Promocion" value="" id="dpd1"><br>
+            <input type="text" name="fin" class="form-control" placeholder="Fin de la Promocion" value="" id="dpd2"><br>
+        </div>
+        <input type="text" name="producto" id="producto" disabled placeholder="Producto de Promocion" class="form-control" ><br>
+        <input type="hidden" name="valProducto" value="" id="valProducto">');        
+		
+		$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1' ");
+		echo('<select name="categoriaPadre" id="categoriaPadre" class="form-control">
+		<option selected="selected" value="0">Seleccione.. </option>');
+		while ($infoCat=mysql_fetch_array($conCat)) {			
+			    echo('<option value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+		}
+		echo('</select><br>');	
+		echo('<select name="subCategoria" id="subCategoria" class="form-control">
+			<option selected="selected" value="">Seleccione..</option>
+			</select>
+			<br>');			
+
+		echo('<div id="miModelo" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    		<div class="modal-dialog modal-lg">
+      			<div class="modal-content">
+        			<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        				<h4 class="modal-title">Modal title</h4>
+      				</div>
+      				<div id="modelBody" class="modal-body">
+        				
+      				</div>
+      				<div class="modal-footer">        				
+        				<button type="button" class="btn btn-primary">Save changes</button>
+      				</div>
+      			</div>
+    		</div>
+  		</div>');
+
+		echo('<input type="hidden" name="nuevaPromo" value="">');				
+
+		echo('<button class="btn btn-primary" onclick="addPromo()">Agregar</button>');
+
+	    echo('</form>	');	    	    
+}
+
+/*  ====================  Funcion para agregar un nueva promocion   ====================   */
+function addPromo($inicio,$fin,$descripcion,$descripcionCorta,$idProd,$idEmpleado){
+	$consulta=("insert into promocion value (0,'$inicio','$fin','A','$descripcion','$descripcionCorta','NULL','$idProd','$idEmpleado')");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");
+}
+/*  ====================  Formulario para editar los datos de un nueva promocion   ====================   */
+
+/*  ====================  Funcion para actualizar en la BD la informacion de una promocion    ====================   */
+
+/*  ====================  Funcion para cambiar el status de una promocion   ====================   */
+function cambiarStatusPromo($idEF,$status){
+	$consulta=("update promocion set status='$status' where idPromocion='$idEF'");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");	
+}
+
+/*  ====================  Formulario para subir el imagenes de las promociones   ====================   */
+function displayImgUploadPromo(){
+
+	echo('<form role="form" name="formImg" action="" method="post" enctype="multipart/form-data" style="width:400px; margin: 0 auto;">');
+	echo('
+		<!-- <input type="file" class="filestyle" data-input="false"> -->
+		<input name="archivo" id="archivo" type="file" class="filestyle" data-buttonName="btn-primary">
+		<input name="enviar" class="btn btn-primary" type="submit" id="enviar" value="Upload File" />
+		<input name="action" type="hidden" value="upload">
+		');
+	echo("</form>");
+
+}
+
+/*  ====================  Funcion para actualizar la informacion en la BD de la ruta de la imagen   ====================   */
+function updateImgPromo($id,$url){
+	$consulta=("UPDATE promocion set img='$url' WHERE idPromocion='$id'");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
+	header("Location: ./index.php");
 }
 
 
@@ -787,6 +971,90 @@ function updateNiveles($idNiv,$nombre,$statusNiv){
 function cambiarStatusNiveles ($idNiv, $statusNiv){
 	$consultaDepa=("update nivel set status='$statusNiv' where idNivel='$idNiv'");
 	@mysql_query($consultaDepa) or die ("No se puede ejecutar la consulta".$consultaDepa);
+	header("Location: ./index.php");
+}
+
+/*  =======================================================================================   */
+/*  ==============================  Tabla de Clientes   ====================================  */
+/*  =======================================================================================   */
+function infoTablaClientes(){
+	$conClientes= mysql_query("SELECT * FROM cliente");
+	while ($infoClientes=mysql_fetch_array($conClientes)) {
+		echo('			
+			<tr>			   
+			   <td>'.$infoClientes["nombre"].'</td>
+			   <td>'.$infoClientes["apellido"].'</td>
+			   <td>'.$infoClientes["titulo"].'</td>
+			   <td>'.$infoClientes["user"].'</td>
+			   <td>'.$infoClientes["pass"].'</td>
+			   <td>'.$infoClientes["status"].'</td>
+			   <td><a href="index.php?ID='.$infoClientes["idCliente"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoClientes["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoClientes["idCliente"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoClientes["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoClientes["idCliente"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}
+}
+
+/*  ====================  Formulario para un nuevo cliente   ====================   */
+function displayNewClientes(){	
+	echo('<form role="form" name="formNuevoCliente" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Nuevo Cliente</h3>');
+
+		echo('<input type="text" name="nombre" placeholder="Nombre Usuario" class="form-control" ><br>
+		<input type="text" name="apellido" placeholder="Apellido Usuario" class="form-control" ><br>
+		<input type="text" name="titulo" placeholder="Titulo" class="form-control" ><br>
+		<input type="text" name="user" placeholder="Usuario" class="form-control" ><br>
+		<input type="password" name="pass" placeholder="Password" class="form-control" ><br>
+		<input type="hidden" name="nuevaCli" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addConfCliente()">Agregar</button>');
+
+	echo('</form>');
+}
+
+/*  ====================  Funcion para agregar un nuevo cliente   ====================   */
+function addConfCliente($nombre,$apellido,$titulo,$user,$pass){
+	$consulta=("insert into cliente value (0,'$nombre','$apellido','$titulo','$user','$pass','A')");
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");
+}
+
+/*  ====================  Formulario para editar los datos de un cliente   ====================   */
+function displayUpdateCliente($idCl){
+	echo('<form role="form" name="formUpdateClie" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Editar Cliente</h3>');
+		$conClien= mysql_query("SELECT * FROM cliente WHERE idCliente='$idCl'");
+		while ($infoClien=mysql_fetch_array($conClien)) {
+
+			echo('<input type="text" name="nombre" placeholder="Nombre empleado" class="form-control" value="'.$infoClien["nombre"].'"><br>
+			<input type="text" name="apellido" placeholder="Apellido empleado" class="form-control" value="'.$infoClien["apellido"].'"><br>
+			<input type="text" name="titulo" placeholder="Titulo Usuario" class="form-control" value="'.$infoClien["titulo"].'"><br>
+			<input type="text" name="user" placeholder="Usuario empleado" class="form-control" value="'.$infoClien["user"].'"><br>
+			<input type="password" name="pass" placeholder="Password empleado" class="form-control" value="'.$infoClien["pass"].'"><br>						
+			<input type="hidden" name="updateIdCli" value="'.$idCl.'">
+			<input type="hidden" name="updateCli" value="">');				
+
+		}
+
+		echo('<button class="btn btn-primary" onclick="updateCliente()">Actualizar</button>');
+
+	echo('</form>	');
+}
+
+/*  ====================  Funcion para actualizar en la BD la informacion de un cliente   ====================   */
+function updateClientes($idCli,$nombre,$apellido,$titulo,$user,$pass){
+	$consultaClien=("update cliente set nombre='$nombre', apellido='$apellido', titulo='$titulo', user='$user', pass='$pass', status='A' WHERE idCliente='$idCli'");
+	@mysql_query($consultaClien)or die ("No se puede ejecutar la accion".$consultaClien);
+	header("Location: ./index.php");
+}
+
+/*  ====================  Funcion para cambiar el status de un cliente   ====================   */
+function cambiarStatusCliente ($idCli, $statusClie){
+	$consultaClie=("update cliente set status='$statusClie' where idCliente='$idCli'");
+	@mysql_query($consultaClie) or die ("No se puede ejecutar la consulta".$consultaClie);
 	header("Location: ./index.php");
 }
 

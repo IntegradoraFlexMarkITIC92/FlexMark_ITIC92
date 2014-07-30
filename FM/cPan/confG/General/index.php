@@ -40,6 +40,10 @@ if (!isset($_SESSION["logged_adm"])){
       $iva=$_REQUEST['iva'];
       $id=$_REQUEST['updateID'];           
       
+      if(isset($_REQUEST['idDefault'])){
+        actualizaConfDefault($id);
+      }
+
       updateConfG($id,$title,$iva);
 
     }
@@ -110,6 +114,24 @@ if (!isset($_SESSION["logged_adm"])){
 
     <script type="text/javascript" src="/FM/js/jquery.js"></script>
     <script type="text/javascript" src="/FM/js/bootstrap-filestyle.min.js"> </script>
+
+    <!-- jquery -->    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#categoriaPadre").change(function(){
+          var idCategoriaPadre = $("#categoriaPadre").val();          
+          $.ajax({
+            url:"subCategorias.php",
+            type:"POST",
+            data:"idCategoriaPadre="+idCategoriaPadre,
+            success: function(opciones){
+              $("#subCategoria").html(opciones);
+            }
+          })
+        });
+      });
+                        
+      </script>
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
