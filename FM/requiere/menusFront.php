@@ -83,7 +83,7 @@ function menuFront(){ ?>
 	        	  		</ul>
 	        	  		<ul class="nav pull-right">
 	        	  			<li class="dropdown" id="registrar">
-	          					<button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#modal_id2">Registro Clientes</button>
+	          					<a class="dropdown-toggle" href="#" id="registrar" data-toggle="dropdown" id="navLogin">Registrar</a>
 	          				</li>
 	        	  		</ul>
 	        	  	<?php } ?>

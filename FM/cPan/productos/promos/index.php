@@ -58,25 +58,19 @@ if (!isset($_SESSION["logged_adm"])){
     }
 
     if(!is_null($_REQUEST['updPromo']) && $_REQUEST['updPromo']=="upd"){      
-      //Llamo la funcion de actualizar            
-      $descCorta=$_REQUEST['descripcionCorta'];
+      //Llamo la funcion de actualizar  
+      $descCorta=$_REQUEST['descCorta'];
       $desc=$_REQUEST['descripcion'];
-      $parte=$_REQUEST['noParte'];
-      $precio=$_REQUEST['precio'];
-      $exist=$_REQUEST['existencia'];
-      $rMM=$_REQUEST['rangoMM'];
-      $pMM=$_REQUEST['precioMM'];
-      $rM=$_REQUEST['rangoMayoreo'];
-      $pM=$_REQUEST['precioMayoreo'];
-      $subCat=$_REQUEST['subCategoria']; 
-      $idProd=$_REQUEST['updateID'];
-      if(isset($_REQUEST['iva'])){
-        $iva="S";
-      }else{
-        $iva="N";
-      }           
-      
-      updPromo($descCorta,$desc,$parte,$precio,$exist,$rMM,$pMM,$rM,$pM,$subCat,$iva,$idProd);
+      $inicio=$_REQUEST['inicio'];
+      $fin=$_REQUEST['fin'];          
+
+      $inicioPartes = explode("/", $inicio);
+      $inicioDB = $inicioPartes[2].'-'.$inicioPartes[0].'-'.$inicioPartes[1];
+
+      $finPartes = explode("/", $fin);
+      $finDB = $finPartes[2].'-'.$finPartes[0].'-'.$finPartes[1];
+
+      updPromo($inicioDB,$finDB,$desc,$descCorta,$_REQUEST["updateID"]);
     }
 
 

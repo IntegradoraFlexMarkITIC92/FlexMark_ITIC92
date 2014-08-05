@@ -69,7 +69,11 @@ include("requiere/menusFront.php");
 
     <!--javascript modal-->
     <script type="text/javascript">
-      $('#modal_id2').modal('show');
+      $(document).ready(function(){
+        $("#registrar").click(function(){
+          $('#modal_id2').modal('show');
+        });        
+      });      
       //$('#modal_id2').modal({ backdrop: 'static', keyboard: true });
     </script>
     <!--javascript modal-->  
@@ -90,7 +94,10 @@ include("requiere/menusFront.php");
     <div class="container theme-showcase" role="main">
 	
 	<!--Inicia carousel-->
-	<?php showPromos(); ?>
+	<?php 
+    /*$hoy=(date("Y-m-d"));
+    echo("Hoy es dia= ".$hoy);*/
+    showPromos(); ?>
 	<!--Termina carousel-->
 
   <!-- inicia cuadro modal acceso usaurios -->

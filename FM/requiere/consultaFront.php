@@ -25,51 +25,68 @@ function getTitle(){
 /*  =======================================================================================   */
 /*  =================  Funcion para realizar consulta a las promociones  ==================   */
 /*  =======================================================================================   */
-function showPromos(){
+function showPromos(){	
 	echo('<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">');
-		$conCount= mysql_query('SELECT count(1) as Contador FROM promocion where status="A" AND fin >= "2014-07-30"');
+		$conCount= mysql_query('SELECT count(1) as Contador FROM promocion where status="A" AND fin >= "'.date("Y-m-d").'"');
 		if($infoCount=mysql_fetch_array($conCount)){
-			echo('<ol class="carousel-indicators">');
-			for ($i=0; $i < $infoCount["Contador"]; $i++) { 
-				if($i==0){
-					echo('<li data-target="#carousel-example-generic" data-slide-to="'.$i.'" class="active"></li>');
-				}else{
-					echo('<li data-target="#carousel-example-generic" data-slide-to="'.$i.'"></li>');
+			if($infoCount["Contador"]!=0){
+				echo('<ol class="carousel-indicators">');
+				for ($i=0; $i < $infoCount["Contador"]; $i++) { 
+					if($i==0){
+						echo('<li data-target="#carousel-example-generic" data-slide-to="'.$i.'" class="active"></li>');
+					}else{
+						echo('<li data-target="#carousel-example-generic" data-slide-to="'.$i.'"></li>');
+					}
 				}
-			}
+				echo('</ol>');
+				echo('<div class="carousel-inner">');
+					$conPromos = mysql_query('SELECT * FROM promocion where status="A" AND fin >= "'.date("Y-m-d").'"');
+					$i=0;
+					while($infoPromos=mysql_fetch_array($conPromos)){					
+						if($i==0){
+							echo('<div class="item active">
+	              				<center><img src="/FM/'.$infoPromos["img"].'" alt="Img Pre"></center>
+	              				<div class="carousel-caption">
+	    							<h1>'.$infoPromos["descripcion"].'</h1>
+	    							<h3>'.$infoPromos["descripcionCorta"].'</h3>
+	  							</div>
+	            			</div>');
+						}else{
+							echo('<div class="item">
+	              				<center><img src="/FM/'.$infoPromos["img"].'" alt="Img Pre"></center>
+	              				<div class="carousel-caption">
+	    							<h1>'.$infoPromos["descripcion"].'</h1>
+	    							<h3>'.$infoPromos["descripcionCorta"].'</h3>
+	  							</div>
+	            			</div>');
+						}
+						$i++;					
+					}
+
+				echo('</div>');	
+			}else{
+			echo('<ol class="carousel-indicators">');
+				echo('<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>');
 			echo('</ol>');
 			echo('<div class="carousel-inner">');
-				$conPromos = mysql_query('SELECT * FROM promocion where status="A" AND fin >= "2014-07-30"');
-				$i=0;
-				while($infoPromos=mysql_fetch_array($conPromos)){					
-					if($i==0){
-						echo('<div class="item active">
-              				<center><img src="/FM/'.$infoPromos["img"].'" alt="Img Pre"></center>
+				echo('<div class="item active">
+              				<center><img src="/FM/imgUpload/imgPruebas/BelAir-Pascua2014.jpg" alt="Img Pre"></center>
               				<div class="carousel-caption">
-    							<h1>'.$infoPromos["descripcion"].'</h1>
-    							<h3>'.$infoPromos["descripcionCorta"].'</h3>
+    							<h1>Flex Mark</h1>
+    							<h3>Buenas</h3>
   							</div>
             			</div>');
-					}else{
-						echo('<div class="item">
-              				<center><img src="/FM/'.$infoPromos["img"].'" alt="Img Pre"></center>
-              				<div class="carousel-caption">
-    							<h1>'.$infoPromos["descripcion"].'</h1>
-    							<h3>'.$infoPromos["descripcionCorta"].'</h3>
-  							</div>
-            			</div>');
-					}
-					$i++;					
-				}
-
-			echo('</div>');
-			echo('<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+				echo('</div>');
+			}
+		
+		echo('<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
           		<span class="glyphicon glyphicon-chevron-left"></span>
         	</a>
         	<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
           		<span class="glyphicon glyphicon-chevron-right"></span>
         	</a>');
-		}
+	}
+
 	echo('</div>');
 }
 

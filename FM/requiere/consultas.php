@@ -542,7 +542,7 @@ function displayNewPro(){
 /*  ====================  Funcion para agregar un nuevo producto   ====================   */
 
 function addProducto($descCorta,$desc,$parte,$precio,$exist,$rMM,$pMM,$rM,$pM,$subCat,$iva,$idusu){	
-	$consulta=("insert into producto value (0,'$desc','$descCorta','NULL','$parte','$precio','$exist','$iva','$rMM','$pMM','$rM','$pM','A','$subCat','$idusu')");	
+	$consulta=("insert into producto value (0,'$desc','$descCorta','$parte','$precio','$exist','$iva','$rMM','$pMM','$rM','$pM','A','$subCat','$idusu')");	
 	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
 	header("Location: ./index.php");
 }
@@ -563,13 +563,33 @@ function displayUpdPro($idPro){
 			<input type="text" name="precioMM" value="'.$infoProd["precioMedioMayoreo"].'" placeholder="Precio Medio Mayoreo" class="form-control" ><br>
 			<input type="text" name="rangoMayoreo" value="'.$infoProd["rangoMayoreo"].'" placeholder="Rango Mayoreo" class="form-control" ><br>
 			<input type="text" name="precioMayoreo" value="'.$infoProd["precioMayoreo"].'" placeholder="Precio Mayoreo" class="form-control" ><br>');
-			$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1'");
+			
+			$conPadre = mysql_query("SELECT idCatPadre FROM categoria where idCategoria=".$infoProd['idCategoria']." ");
+			$infoPadre = mysql_fetch_array($conPadre);			
+
+			$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1' ");
 			echo('<select name="categoriaPadre" id="categoriaPadre" class="form-control">
 			<option selected="selected" value="0">Seleccione.. </option>');
-			while ($infoCat=mysql_fetch_array($conCat)) {			
-				    echo('<option value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+			while ($infoCat=mysql_fetch_array($conCat)) {	
+				if($infoCat["idCategoria"]==$infoPadre["idCatPadre"]){
+			    	echo('<option selected="selected" value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+				}else{
+					echo('<option value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+				}
 			}
-			echo('</select><br>');	
+			echo('</select><br>');				
+			$conCatHijas = mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE idCatPadre=".$infoPadre['idCatPadre']." ");			
+			echo('<select name="subCategoria" id="subCategoria" class="form-control">
+			 	<option selected="selected" value="">Seleccione..</option>');
+				while($infoHijas = mysql_fetch_array($conCatHijas)){
+					if($infoProd["idCategoria"]==$infoHijas["idCategoria"]){
+				    	echo('<option selected="selected" value="'.$infoHijas["idCategoria"].'">'.$infoHijas["nombreCategoria"].'</option>');
+					}else{
+						echo('<option value="'.$infoHijas["idCategoria"].'">'.$infoHijas["nombreCategoria"].'</option>');
+					}
+				}
+			echo('</select>
+			<br>');		
 			if($infoProd["exentoIVA"]=="S"){
 				echo('<input type="checkbox" name="iva" checked="checked" value="'.$infoProd["exentoIVA"].'"> Exento de IVA <br><br>');
 			}else{
@@ -585,10 +605,9 @@ function displayUpdPro($idPro){
 
 /*  ====================  Funcion para actualizar en la BD la informacion de un producto    ====================   */
 function updProducto($descCorta,$desc,$parte,$precio,$exist,$rMM,$pMM,$rM,$pM,$subCat,$iva,$idProd){	
-	$consulta=("update set descripcion='$desc', descripcionCorta='$descCorta', noParte='$parte', precio='$precio', existencia='$exist',exentoIVA='$iva', rangoMedioMayoreo='$rMM', precioMedioMayoreo='$pMM', rangoMayoreo='$rM',precioMayoreo='$pM', idCategoria='$subCat' WHERE idProducto='$idProd')");	
-	echo $consulta;
-	#@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
-	#header("Location: ./index.php");
+	$consulta=("update producto set descripcion='$desc', descripcionCorta='$descCorta', noParte='$parte', precio='$precio', existencia='$exist',exentoIVA='$iva', rangoMedioMayoreo='$rMM', precioMedioMayoreo='$pMM', rangoMayoreo='$rM',precioMayoreo='$pM', idCategoria='$subCat' WHERE idProducto='$idProd'");	
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");
 }
 
 
@@ -602,21 +621,65 @@ function cambiarStatusPro($idEF,$status){
 
 /*  ====================  Formulario para subir el imagenes de los productos   ====================   */
 
-function displayImgUploadProductos(){
-
+function displayImgUploadProductos($error){	
+	echo("<br><br>");
+	echo('<div class="panel panel-default">
+  	<div class="panel-body">');
 	echo('<form role="form" name="upload" id="upload" action="" method="post" enctype="multipart/form-data" style="width:400px; margin: 0 auto;">');
-	echo('
-		<!-- <input type="file" class="filestyle" data-input="false"> -->
-		<input mutliple="true" name="archivos[]" id="archivo" type="file" class="filestyle" data-buttonName="btn-primary">						
-		<div id="moreInputs">
-
-		</div>
-		<input name="mas" class="btn btn-success" id="mas" value="Agregar otra.." /><br><br>
-		<input name="enviar" class="btn btn-primary" type="submit" id="enviar" value="Upload File" />
+	echo('<h3>Agregar imagenes del producto</h3><br>');
+	echo('		
+		<input name="imagenesProducto[]" multiple id="archivo" type="file" class="filestyle" data-iconName="glyphicon-inbox" data-buttonName="btn-success" data-input="false"><br>');
+		echo($error);
+		echo('<input name="enviar" class="btn btn-primary" type="submit" id="enviar" value="Upload File" />
 		<input name="action" type="hidden" value="upload">
-		');
-	echo("</form>");
+		');		
+	echo("</form><br><br>");	
+	echo('</div>
+	</div>');		
 
+}
+
+function displayImgProductos($idProd){
+	echo("<br><br>");
+	echo('<div class="panel panel-default">
+  	<div class="panel-body">');	
+		echo('<div class="row">');
+
+				$conDC = mysql_query("SELECT descripcionCorta FROM producto WHERE idProducto='$idProd'");
+				$infoDC = mysql_fetch_array($conDC);
+
+				echo('<h3>Imagenes del producto <u><mark>'.$infoDC["descripcionCorta"].'</mark></u> </h3><br>');
+
+				$conImg= mysql_query("SELECT * FROM imgproductos WHERE idProducto = '$idProd' ");
+				while($infoImg = mysql_fetch_array($conImg)){
+					echo('<div class="col-xs-4 col-md-2">
+							<div class="thumbnail">
+								<a href="index.php?thum='.$infoImg["idImgProducto"].'&imgID='.$idProd.'"> <span class="glyphicon glyphicon-remove"></span> </a>
+                				<a href="#" class="thumbnail">                				
+                    				<img src="/FM/'.$infoImg["url"].'" value="'.$infoImg["idImgProducto"].'" alt="img..">                    			
+                				</a> 
+                				<div class="caption">');
+									if($infoImg["predeterminada"]=="S"){
+        								echo('<p>Imagen Predeterminada</p>');
+        							}else{
+        								echo('<p>Establecer Predeterminada</p>
+        								<p><a href="#" class="btn btn-primary" role="button">Button</a></p>');
+        							}        							
+							    echo('</div>
+                			</div>
+            		</div>');
+				}				
+		echo('</div>');
+	echo("<br><br>");
+	echo('</div>
+	</div>');
+}
+
+/*  ====================  Funcion para actualizar la informacion en la BD de la ruta de la imagen   ====================   */
+function updateImgProducto($id,$url){
+	$consulta=("INSERT INTO imgproductos values ('0','$url',NULL,'$id')");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
+	header("Location: ./index.php");
 }
 
 /*  =======================================================================================   */
@@ -703,8 +766,69 @@ function addPromo($inicio,$fin,$descripcion,$descripcionCorta,$idProd,$idEmplead
 	header("Location: ./index.php");
 }
 /*  ====================  Formulario para editar los datos de un nueva promocion   ====================   */
+function displayUpdPromo($id){
+	echo('<form role="form" name="formNuevoPromo" style="width:400px; margin: 0 auto;">');
+		echo('<h3>Editar los dats de la promocion</h3>');
+		$conPromo = mysql_query("SELECT * FROM promocion WHERE idPromocion='$id'");
+		while($infoPromo = mysql_fetch_array($conPromo)){
+			echo('<input type="text" value="'.$infoPromo["descripcion"].'" name="descripcion" placeholder="Titulo Principal" class="form-control" ><br>
+			<textarea name="descCorta" placeholder="Descripcion secundaria" class="form-control">'.$infoPromo["descripcionCorta"].'</textarea><br>');
+
+			$inicioPartes = explode("-", $infoPromo["inicio"]);
+			$mostrarInicio = $inicioPartes[1]."/".$inicioPartes[2]."/".$inicioPartes[0];
+
+			$finPartes = explode("-", $infoPromo["fin"]);
+			$mostrarFin = $finPartes[1]."/".$finPartes[2]."/".$finPartes[0];
+
+			echo('<div class="hero-unit">
+	        	<input type="text" name="inicio" class="form-control" placeholder="Inicio de la Promocion" value="'.$mostrarInicio.'" id="dpd1"><br>
+	            <input type="text" name="fin" class="form-control" placeholder="Fin de la Promocion" value="'.$mostrarFin.'" id="dpd2"><br>
+	        </div>
+	        <input type="text" name="producto" id="producto" disabled placeholder="Producto de Promocion" class="form-control" ><br>
+	        <input type="hidden" name="valProducto" value="" id="valProducto">');        
+			
+			$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1' ");
+			echo('<select name="categoriaPadre" id="categoriaPadre" class="form-control">
+			<option selected="selected" value="0">Seleccione.. </option>');
+			while ($infoCat=mysql_fetch_array($conCat)) {			
+				    echo('<option value="'.$infoCat["idCategoria"].'">'.$infoCat["nombreCategoria"].'</option>');
+			}
+			echo('</select><br>');	
+			echo('<select name="subCategoria" id="subCategoria" class="form-control">
+				<option selected="selected" value="">Seleccione..</option>
+				</select>
+				<br>');			
+
+			echo('<div id="miModelo" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	    		<div class="modal-dialog modal-lg">
+	      			<div class="modal-content">
+	        			<div class="modal-header">
+	        				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        				<h4 class="modal-title">Modal title</h4>
+	      				</div>
+	      				<div id="modelBody" class="modal-body">
+	        				
+	      				</div>
+	      				<div class="modal-footer">        				
+	        				<button type="button" class="btn btn-primary">Save changes</button>
+	      				</div>
+	      			</div>
+	    		</div>
+	  		</div>');
+			echo('<input type="hidden" name="updateID" value="'.$infoPromo["idPromocion"].'">');
+			echo('<input type="hidden" name="updPromo" value="">');				
+			echo('<button class="btn btn-primary" onclick="updPromocion()">Actualizar</button>');
+		}
+
+	echo('</form>	');	    	    
+}
 
 /*  ====================  Funcion para actualizar en la BD la informacion de una promocion    ====================   */
+function updPromo($inicioDB,$finDB,$desc,$descCorta,$idPromo){
+	$consulta = ("UPDATE promocion set inicio='$inicioDB', fin='$finDB', descripcion='$desc', descripcionCorta='$descCorta' WHERE idPromocion='$idPromo' ");	
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");	
+}
 
 /*  ====================  Funcion para cambiar el status de una promocion   ====================   */
 function cambiarStatusPromo($idEF,$status){

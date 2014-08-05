@@ -60,6 +60,31 @@ function menuAdmin(){ ?>
 	                </ul>
 	             </li>
 	          </ul>
+	          <?php if (($_SESSION["logged_adm"])){
+	          			$conNom = mysql_query('SELECT nombre, apellido FROM empleado where idEmpleado="'.$_SESSION["logged_adm"].' " ');
+	          		}else if (($_SESSION["logged_vtas"])) {
+	          			$conNom = mysql_query('SELECT nombre, apellido FROM empleado where idEmpleado="'.$_SESSION["logged_vtas"].' " ');
+	          		}else if (($_SESSION["logged_almacen"])) {
+	          			$conNom = mysql_query('SELECT nombre, apellido FROM empleado where idEmpleado="'.$_SESSION["logged_almacen"].' " ');
+	          		} ?>
+		          		<ul class="nav pull-right">
+	          				<li class="dropdown" id="menuUser">
+	            				<a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogout">
+	            					<?php
+	            					
+	            					if($infoCli=mysql_fetch_array($conNom)){
+	            						echo('<span class="glyphicon glyphicon-user"></span>');
+	            						echo("&nbsp &nbsp".$infoCli["nombre"]." ".$infoCli["apellido"]);
+	            					}
+	            					?>
+	            				</a>
+	            				<div class="dropdown-menu" style="padding:17px;">
+	              					<form class="form-signin" role="form" name="logout" id="formLogout">	              						
+	        							<center><a href="index.php?op=logout">LogOut</a></center>
+	              					</form>
+	            				</div>
+	          				</li>
+	        	  		</ul>	        	  	
 	      </div>
 	    </div>
 	    </div>

@@ -84,16 +84,19 @@ if (!isset($_SESSION["logged_adm"])){
 }
 
     if ($_POST["action"] == "upload") {
-      $id=$_REQUEST['imgID'];
-
-      $tamano = $_FILES["archivo"]['size'];
-      $tipo = $_FILES["archivo"]['type'];
-      $archivo = $_FILES["archivo"]['name'];
-      $trozos = explode(".", $archivo); 
-      $extension = end($trozos);
       
-      if ($archivo != "") {
-        
+      $id=$_REQUEST['imgID'];      
+      $contador = count($_FILES["imagenesProducto"]["name"]);
+
+      $conNumImagenes = mysql_query("SELECT count(1) AS total FROM imgproductos WHERE idProducto='$id'");
+      $infoNI= mysql_fetch_array($conNumImagenes);
+      $imagenesBD = $infoNI["total"];
+
+      $total = $imagenesBD + $contador;
+      
+      if($_FILES["imagenesProducto"]["name"][0]!="" and $total <= 6){
+        //echo("Subiste ".$contador." archivos<br>");
+
         $dirDown="../../";
         $dirID="imgUpload/imgProductos/".$id."/";
         
@@ -103,15 +106,56 @@ if (!isset($_SESSION["logged_adm"])){
           mkdir($dirValidar, 0700);
         }
 
-        $nombreArchivo="imgLogo_ID".$id.".".$extension;
+        for ($i=0; $i < $contador ; $i++) { 
+          //echo("Nombre de ".$i." = ".$_FILES["imagenesProducto"]["name"][$i]."<br>");
+          $tamano = $_FILES["imagenesProducto"]['size'][$i];
+          $tipo = $_FILES["imagenesProducto"]['type'][$i];
+          $archivo = $_FILES["imagenesProducto"]['name'][$i];
+          $trozos = explode(".", $archivo); 
+          $extension = end($trozos);
+
+          $iBD = 0;
+          $iBD = $i + $imagenesBD;
+
+          $nombreArchivo="imgProd_".$iBD."_ID".$id.".".$extension;
+
+          $destinocompleto=$dirValidar."".$nombreArchivo;
+          copy($_FILES['imagenesProducto']['tmp_name'][$i], $destinocompleto);
+          
+          $destinoBD=$dirID.$nombreArchivo;
+          updateImgProducto($id,$destinoBD);
 
 
-        $destinocompleto=$dirValidar."".$nombreArchivo;
-        copy($_FILES['archivo']['tmp_name'], $destinocompleto);
+        }
 
-        $destinoBD=$dirID.$nombreArchivo;
-        updateDirLogo($id,$destinoBD);
+      }else{
+        $total = 6 - $imagenesBD ;
+        if($total==0){
+          $error_img = "Solo se permiten subir 6 imagenes por producto<br><br>";
+        }else{
+          $error_img = "Solo puedes subir ".$total." imagenes para este producto<br><br>";          
+        }
       }
+
+      /*for ($i=0; $i < $contador ; $i++) { 
+        echo("Nombre de ".$i." = ".$_FILES["imagenesProducto"]["name"][$i]."<br>");
+      }*/
+    
+    }
+
+    if(!is_null($_REQUEST['thum']) && !is_null($_REQUEST['imgID']) ){      
+      $idImg = $_REQUEST['thum'];
+      $conURL = mysql_query("SELECT url FROM imgproductos WHERE idImgProducto='$idImg'");
+      $infoID = mysql_fetch_array($conURL);
+
+      unlink("../../".$infoID["url"]);
+
+      $consulta=("DELETE FROM imgproductos WHERE idImgProducto='$idImg'");
+      echo($consulta);
+      @mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
+      header("Location: ./index.php?imgID=".$_REQUEST['imgID']."");
+
+      //echo("URL a eliminar= ".$infoID["url"]);
     }
 
 ?>
@@ -221,9 +265,11 @@ if (!isset($_SESSION["logged_adm"])){
         displayUpdPro($_REQUEST['ID']);
     }
 
-    if(!is_null($_REQUEST['imgID'])){
-      displayImgUploadProductos();
-    }    
+    if(!is_null($_REQUEST['imgID'])){ 
+      displayImgProductos($_REQUEST['imgID']); 
+      displayImgUploadProductos($error_img); 
+
+      } 
 
     ?>
     </div> <!-- /container -->

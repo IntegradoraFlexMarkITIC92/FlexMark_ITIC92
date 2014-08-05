@@ -187,16 +187,16 @@ function addPromo(){
 }
 
 /*  ====================   Validacion para actualizar una  promocion  ====================   */
-function updPromo(){
+function updPromocion(){
 	var error="";
-	var form=document.formNuevoPro;
+	var form=document.formNuevoPromo;
 
-	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.noParte.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
+	if(form.descCorta.value=="" || form.descripcion.value=="" || form.inicio.value=="" || form.fin.value==""){
 		error+="\n -Proporcionar Datos";
 	}
 
 	if(error==""){		
-		form.updProd.value="upd";
+		form.updPromo.value="upd";
 		form.submit();
 	}else{
 		alert(error);
