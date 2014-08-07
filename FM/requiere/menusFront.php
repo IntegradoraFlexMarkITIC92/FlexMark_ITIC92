@@ -29,18 +29,15 @@ function menuFront(){ ?>
 	  		      		<li class="dropdown">
 	              			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi cuenta<span class="caret"></span></a>
 	              			<ul class="dropdown-menu" role="menu">
-	                			<li class="active"><a href="/FM/cPan/productos/">Administrar productos</a></li>
-	                			<li><a href="/FM/cPan/productos/cat/">Categorias</a></li>
-	                			<li><a href="/FM/cPan/productos/promos/">Promociones</a></li>
+	                			<li class="active"><a href="/FM/my-account/me/">Mi perfil</a></li>
+	                			<li><a href="/FM/my-account/facturas/">Datos de facturacion</a></li>
+	                			<li><a href="/FM/my-account/envios/">Datos de Envio</a></li>	                			
 	              			</ul>
 	            		</li>
 	            		<li class="dropdown">
 	              			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pedidos<span class="caret"></span></a>
 	                		<ul class="dropdown-menu" role="menu">
-	                  			<li><a href="/FM/cPan/confG/">Empresa</a></li>	
-	                  			<li><a href="/FM/cPan/confG/General/">General</a></li>
-	                  			<li><a href="/FM/cPan/confG/DF">Datos Facturacion</a></li>	                  
-	                  			<li><a href="#">Tipo de Cambio</a></li>
+	                  			<li><a href="/FM/my-account/pedidos/">Pedidos</a></li>
 	                		</ul>
 	             		</li>
 	          		</ul>

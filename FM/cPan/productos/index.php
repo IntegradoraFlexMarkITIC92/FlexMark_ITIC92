@@ -158,6 +158,21 @@ if (!isset($_SESSION["logged_adm"])){
       //echo("URL a eliminar= ".$infoID["url"]);
     }
 
+    if(!is_null($_REQUEST['default']) && !is_null($_REQUEST['imgID']) ){      
+      $idImg = $_REQUEST['default'];
+      $idProd = $_REQUEST['imgID'];
+
+      $consulta = ("UPDATE imgproductos set predeterminada= NULL WHERE idProducto='$idProd'");
+      @mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
+
+      $consulta = ("UPDATE imgproductos set predeterminada= 'S' WHERE idImgProducto='$idImg'");
+      @mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
+      header("Location: ./index.php?imgID=".$idProd."");
+
+    }
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

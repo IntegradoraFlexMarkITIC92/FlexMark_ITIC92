@@ -3,7 +3,6 @@ error_reporting(0);
 session_start();
 include("../../../requiere/consultas.php");
 include("../../../requiere/menus.php");
-include("../../../../requiere/layouts/layouts.php");
 
 if (!isset($_SESSION["logged_adm"])){
     die("<head>
@@ -144,10 +143,6 @@ if (!isset($_SESSION["logged_adm"])){
 	</div>
 	<!--Termina Tabla responsive-->
 	<a href='index.php?ADD=true'><button class="btn btn-primary">Nueva</button></a>
-
-<!-- Small modal -->
-<button class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Open</button>
-
 
 
 	<!-- Aqui va el formulario -->

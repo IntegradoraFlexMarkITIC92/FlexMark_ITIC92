@@ -76,7 +76,7 @@ if (($_SESSION["logged_almacen"])){
                 }
               }
             ?>
-            <img src=<?php echo('"/FM/'.$ruta.'"');?> height="55%" width="60%"><br><br>
+            <img src=<?php echo('"/FM/'.$ruta.'"');?> height="55%" width="60%" onclick=" window.location = '/FM/'"><br><br>
             Acceso al Sistema
           </center>
         </h2>

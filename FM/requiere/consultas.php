@@ -428,8 +428,8 @@ function displayUpdCat($idCat){
 	echo('<form role="form" name="formUpdCat" style="width:400px; margin: 0 auto;">');
 		echo('<h3>Actualizar informacion</h3>');
 		$conCate= mysql_query("SELECT * FROM categoria WHERE idCategoria='$idCat'");		
-		while ($infoCate=mysql_fetch_array($conCate)) {
-			echo('<input type="text" name="nombre" placeholder="Nombre de Categoria" class="form-control" value='.$infoCate["nombreCategoria"].' ><br>
+		while ($infoCate=mysql_fetch_array($conCate)) {			
+			echo('<input type="text" name="nombre" placeholder="Nombre de Categoria" class="form-control" value="'.$infoCate["nombreCategoria"].'" ><br>
 			<select name="nivelCategoria" id="x" class="form-control">
 			    <option value="">Seleccione.. </option>');
 			if($infoCate["nivelCategoria"]==1){
@@ -650,7 +650,7 @@ function displayImgProductos($idProd){
 
 				echo('<h3>Imagenes del producto <u><mark>'.$infoDC["descripcionCorta"].'</mark></u> </h3><br>');
 
-				$conImg= mysql_query("SELECT * FROM imgproductos WHERE idProducto = '$idProd' ");
+				$conImg= mysql_query("SELECT * FROM imgproductos WHERE idProducto = '$idProd' ORDER BY predeterminada DESC");
 				while($infoImg = mysql_fetch_array($conImg)){
 					echo('<div class="col-xs-4 col-md-2">
 							<div class="thumbnail">
@@ -663,7 +663,7 @@ function displayImgProductos($idProd){
         								echo('<p>Imagen Predeterminada</p>');
         							}else{
         								echo('<p>Establecer Predeterminada</p>
-        								<p><a href="#" class="btn btn-primary" role="button">Button</a></p>');
+        								<p><a href="index.php?default='.$infoImg["idImgProducto"].'&imgID='.$idProd.'" class="btn btn-primary" role="button">Aceptar</a></p>');
         							}        							
 							    echo('</div>
                 			</div>
