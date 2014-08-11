@@ -111,7 +111,7 @@ if (!isset($_SESSION["logged_cliente"])){
                   </tr>
                 </thead>
                 <tbody>
-                  <?php   ?>
+                  <?php infoTablaDF();  ?>
                 </tbody>
               </table>
             </div>

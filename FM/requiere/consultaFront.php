@@ -167,3 +167,70 @@ function updateCliente($nom, $ape, $tit, $pass){
 	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
 	header("Location: ./index.php");
 }
+
+/*  =======================================================================================   */
+/*  ===============================  Tabla de Datos facturacion  ==========================   */
+/*  =======================================================================================   */
+function infoTablaDF(){
+	$conDatos= mysql_query("SELECT idDatosFacturacion, RFC, estado, status FROM datosfacturacion WHERE idCliente='".$_SESSION["logged_cliente"]."'");
+	while ($infoDatos=mysql_fetch_array($conDatos)) {
+		echo('			
+			<tr>			   			   
+			   <td>'.$infoDatos["RFC"].'</td>
+			   <td>'.$infoDatos["estado"].'</td>
+			   <td>'.$infoDatos["status"].'</td>
+			   <td><a href="index.php?ID='.$infoDatos["idDatosFacturacion"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoDatos["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoDatos["idDatosFacturacion"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoDatos["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoDatos["idDatosFacturacion"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}
+}
+
+/*  =======================================================================================   */
+/*  ===============================     Tabla de Datos envio     ==========================   */
+/*  =======================================================================================   */
+function infoTablaDireccion(){
+	$conDatos= mysql_query("SELECT idDireccion, direccion, estado, status FROM direccionCliente WHERE idCliente='".$_SESSION["logged_cliente"]."'");
+	while ($infoDatos=mysql_fetch_array($conDatos)) {
+		echo('			
+			<tr>			   			   
+			   <td>'.$infoDatos["direccion"].'</td>
+			   <td>'.$infoDatos["estado"].'</td>
+			   <td>'.$infoDatos["status"].'</td>
+			   <td><a href="index.php?ID='.$infoDatos["idDireccion"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
+		if($infoDatos["status"]=="A"){
+			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoDatos["idDireccion"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
+		}else if($infoDatos["status"]=="D"){
+			   echo('<td><a href="index.php?STATUS=A&IDE='.$infoDatos["idDireccion"].'"><button type="button" class="btn btn-primary">Alta</button></a></td>');
+		}
+			echo('<tr>');
+	}
+}
+
+/*  =======================================================================================   */
+/*  ===============================     Tabla de Datos envio     ==========================   */
+/*  =======================================================================================   */
+function displayNewEnvio(){	
+	echo('<form role="form" name="formNuevoEnvio" style="width:400px; margin: 0 auto;">');		
+
+		echo('<input type="text" required name="direccion" placeholder="Direccion de Envio" class="form-control" ><br>
+		<input type="text" required name="calle" placeholder="Calle" class="form-control" ><br>
+		<input type="text" required name="muni" placeholder="Municipio" class="form-control" ><br>
+		<input type="text" name="delegacion" placeholder="Delegacion" class="form-control" ><br>');
+		estadosList();
+		echo('<input type="text" required name="cp" placeholder="Codigo Postal" class="form-control" ><br>
+		<input type="hidden" name="nuevoEnvio" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addDirEnvio()">Agregar</button>');
+
+	echo('</form>');
+}
+
+function addEnvio($dir, $calle, $muni, $dele, $edo, $cp){
+	$consulta = ("INSERT into direccioncliente values (0, '$dir', '$calle', '$muni', '$dele', '$edo', 'Mexico', '$cp', '".$_SESSION["logged_cliente"]."','A' )");	
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");	
+}

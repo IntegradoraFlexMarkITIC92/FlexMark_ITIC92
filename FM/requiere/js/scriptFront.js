@@ -45,3 +45,11 @@ function updCliente(){
 		alert(error);
 	}
 }
+
+
+/*  ====================   Validacion para agregar un direccion  ====================   */
+function addDirEnvio(){
+	var form=document.formNuevoEnvio;
+	form.nuevoEnvio.value="ADD";
+	form.submit();
+}

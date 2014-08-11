@@ -20,14 +20,15 @@ if (!isset($_SESSION["logged_cliente"])){
          session_destroy(); // destruyo la sesión 
            header("Location: /FM/");
    }    
-   if(!is_null($_REQUEST["updCli"]) && $_REQUEST["updCli"] == "UPD"){
-      $nom = $_REQUEST["nombre"];
-      $ape = $_REQUEST["apellido"];
-      $tit = $_REQUEST["titulo"];
-      $user = $_REQUEST["user"];
-      $pass = $_REQUEST["pass"];
+   if(!is_null($_REQUEST["nuevoEnvio"]) && $_REQUEST["nuevoEnvio"] == "ADD"){
+      $dir = $_REQUEST["direccion"];
+      $calle = $_REQUEST["calle"];
+      $muni = $_REQUEST["muni"];
+      $dele = $_REQUEST["delegacion"];
+      $edo = $_REQUEST["estadosList"];
+      $cp = $_REQUEST["cp"];
 
-      updateCliente($nom, $ape, $tit, $pass);      
+      addEnvio($dir, $calle, $muni, $dele, $edo, $cp);
    }
 
 
@@ -71,6 +72,19 @@ if (!isset($_SESSION["logged_cliente"])){
     <!-- Validacion usuario-->
     <script src="/FM/requiere/js/scriptFront.js"></script>
 
+    <!-- jquery -->
+    <script type="text/javascript" src="/FM/js/jquery.js"></script>
+
+    <!--javascript modal-->
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#open").click(function(){
+          $('#modal_id2').modal('show');
+        });        
+      });      
+    </script>
+    <!--javascript modal--> 
+
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -97,7 +111,49 @@ if (!isset($_SESSION["logged_cliente"])){
             <!--Inicia el contenido de la web de administrador-->
             <h1 class="page-header">Datos de Envio</h1>
 
-            <?php displayCliente(); ?>
+            <strong>Nuevo lugar de envio</strong>
+            <button class="btn btn-success btn-md" data-toggle="modal" href="#" id="open"> Nuevo! </button>            
+
+            <!-- inicia cuadro modal acceso usaurios -->
+            <div class="modal fade" id="modal_id2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel"> Nuevo direccion de envio </h4>
+                  </div>
+                  <div class="modal-body">
+                    <!--Aqui va la funcion de registro a clientes-->
+                    <?php displayNewEnvio();  ?>
+                    <!--Aqui va la funcion de registro a clientes-->
+                  </div>
+                  <div class="modal-footer">
+                            
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- termina cuadro modal acceso usaurios -->
+
+
+            <!-- Inicia Tabla responsive-->
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <!--<th>idEmpresa</th>-->
+                    <th>Direccion</th>
+                    <th>Estado</th>                   
+                    <th>Status</th>                      
+                    <th>Modificar</th>
+                    <th>Baja</th>     
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php infoTablaDireccion();  ?>
+                </tbody>
+              </table>
+            </div>
 
 
           </div>
