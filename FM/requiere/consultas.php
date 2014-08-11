@@ -48,7 +48,7 @@ function login($user,$pass){
 				break;
 			}			
 		}else{
-			echo("Error de login");
+			#echo("Error de login");
 		}			
 	}	
 }

@@ -134,3 +134,36 @@ function addConfCliente($nombre,$apellido,$titulo,$user,$pass){
 	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
 	header("Location: ./index.php");
 }
+
+/*  =======================================================================================   */
+/*  =================  Funcion para modificar la informacion del cliente   ================   */
+/*  =======================================================================================   */
+function displayCliente(){
+	$cliente = $_SESSION["logged_cliente"];
+	$conClie = mysql_query("SELECT * FROM cliente WHERE idCliente='$cliente'");
+	while ($infoCliente = mysql_fetch_array($conClie)) {
+		
+		echo('<form role="form" name="formUpdCliente" style="width:400px; margin: 0 auto;">');		
+
+			echo('<input value="'.$infoCliente["nombre"].'" type="text" name="nombre" placeholder="Nombre Usuario" class="form-control" ><br>
+			<input value="'.$infoCliente["apellido"].'" type="text" name="apellido" placeholder="Apellido Usuario" class="form-control" ><br>
+			<input value="'.$infoCliente["titulo"].'" type="text" name="titulo" placeholder="Titulo" class="form-control" ><br>
+			<input value="'.$infoCliente["user"].'" type="text" disabled name="user" placeholder="Usuario" class="form-control" ><br>
+			<input type="password" name="pass" placeholder="Password" class="form-control" ><br>
+			<input type="hidden" name="updCli" value="">');		
+
+			echo('<button class="btn btn-primary" onclick="updCliente()">Actualizar</button>');
+
+		echo('</form>');
+	}
+}
+
+function updateCliente($nom, $ape, $tit, $pass){
+	if($pass!=""){
+		$consulta = ("UPDATE cliente SET nombre='$nom', apellido='$ape', titulo='$tit', pass='$pass' WHERE idCliente='".$_SESSION["logged_cliente"]."' ");		
+	}else{
+		$consulta = ("UPDATE cliente SET nombre='$nom', apellido='$ape', titulo='$tit' WHERE idCliente='".$_SESSION["logged_cliente"]."' ");
+	}
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");
+}

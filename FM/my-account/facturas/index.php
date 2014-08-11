@@ -95,9 +95,26 @@ if (!isset($_SESSION["logged_cliente"])){
         <div class="row">
           <div class="col-lg-12">
             <!--Inicia el contenido de la web de administrador-->
-            <h1 class="page-header">Administra tu perfil</h1>
+            <h1 class="page-header">Datos de Facturas</h1>
 
-            <?php displayCliente(); ?>
+            <!-- Inicia Tabla responsive-->
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <!--<th>idEmpresa</th>-->
+                    <th>RFC</th>
+                    <th>Estado</th>                   
+                    <th>Status</th>                      
+                    <th>Modificar</th>
+                    <th>Baja</th>     
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php   ?>
+                </tbody>
+              </table>
+            </div>
 
 
           </div>

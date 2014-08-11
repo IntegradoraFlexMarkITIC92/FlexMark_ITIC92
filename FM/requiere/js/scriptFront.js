@@ -28,3 +28,20 @@ function addConfCliente(){
 		alert(error);
 	}
 }
+
+/*  ====================   Validacion para agregar un cliente  ====================   */
+function updCliente(){
+	var error="";
+	var form=document.formUpdCliente;
+
+	if(form.nombre.value=="" || form.apellido.value=="" || form.titulo.value=="" || form.user.value==""){
+		error+="\n -Proporcionar Datos Del Cliente";
+	}
+
+	if(error==""){		
+		form.updCli.value="UPD";
+		form.submit();
+	}else{
+		alert(error);
+	}
+}

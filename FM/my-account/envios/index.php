@@ -95,7 +95,7 @@ if (!isset($_SESSION["logged_cliente"])){
         <div class="row">
           <div class="col-lg-12">
             <!--Inicia el contenido de la web de administrador-->
-            <h1 class="page-header">Administra tu perfil</h1>
+            <h1 class="page-header">Datos de Envio</h1>
 
             <?php displayCliente(); ?>
 

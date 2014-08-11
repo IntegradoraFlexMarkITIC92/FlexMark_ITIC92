@@ -2,7 +2,7 @@
 error_reporting(0);
 session_start();
 include("requiere/consultaFront.php");
-include("requiere/menusFront.php");
+include("requiereFront/menus/menusFront.php");
 ?>
 <?php
   
