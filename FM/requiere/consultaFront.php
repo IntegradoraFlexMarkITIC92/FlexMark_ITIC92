@@ -189,6 +189,65 @@ function infoTablaDF(){
 	}
 }
 
+/*  ===============================     Formulario para nuevos Datos envio     ==========================   */
+function displayNewRFC(){	
+	echo('<form role="form" name="formNuevoRFC" style="width:400px; margin: 0 auto;">');		
+
+		echo('<input type="text" required name="razonSocial" placeholder="Razon Social" class="form-control" ><br>
+		<input type="text" required name="rfc" placeholder="RFC" class="form-control" ><br>
+		<input type="text" required name="dir" placeholder="Direccion" class="form-control" ><br>
+		<input type="text" required name="municipio" placeholder="Municipio" class="form-control" ><br>');
+		estadosList();
+		echo('<input type="text" required name="cp" placeholder="Codigo Postal" class="form-control" ><br>
+		<input type="hidden" name="nuevo" value="">');		
+
+		echo('<button class="btn btn-primary" onclick="addNewRFC()">Agregar</button>');
+
+	echo('</form>');
+}
+
+/*  ===============================     Agregar nuevos Datos envio     ==========================   */
+function addRFC($rs, $rfc, $dir, $muni, $edo, $cp){
+	$consulta = ("INSERT into datosfacturacion values (0, '$rs', '$rfc', '$dir', '$cp','$muni', '$edo', 'Mexico','A' , '".$_SESSION["logged_cliente"]."' )");	
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");	
+}
+
+/*  ===============================     Formulario para acutalizar Datos envio     ==========================   */
+function displayUpdRFC($id){		
+	echo('<form role="form" name="formEnvio" style="width:400px; margin: 0 auto;">');		
+		$conDatos = mysql_query("SELECT * FROM datosfacturacion WHERE idDatosFacturacion='$id'");
+		while ($infoDatos = mysql_fetch_array($conDatos)) {			
+			echo('<input type="text" value="'.$infoDatos["razonSocial"].'" required name="razonSocial" placeholder="Razon Social" class="form-control" ><br>
+			<input type="text" value="'.$infoDatos["RFC"].'" required name="rfc" placeholder="RFC" class="form-control" ><br>
+			<input type="text" value="'.$infoDatos["direccion"].'" required name="dir" placeholder="Direccion" class="form-control" ><br>
+			<input type="text" value="'.$infoDatos["municipio"].'" required name="municipio" placeholder="Municipio" class="form-control" ><br>');
+			estadosListUp($infoDatos["estado"]);
+			echo('<input type="text" value="'.$infoDatos["cp"].'" required name="cp" placeholder="Codigo Postal" class="form-control" ><br>
+			<input type="hidden" name="idUpd" value="'.$infoDatos["idDatosFacturacion"].'">
+			<input type="hidden" name="upd" value="">');		
+
+			echo('<button class="btn btn-primary" onclick="updRFC()">Agregar</button>');	
+		}
+
+	echo('</form>');	
+}
+
+/*  ===============================     Actualizar Datos envio     ==========================   */
+function updRFC($idDir, $rs, $rfc, $dir, $muni, $edo, $cp){
+	$consulta = ("UPDATE datosfacturacion set razonSocial='$rs', RFC='$rfc', direccion='$dir', cp='$cp', municipio='$muni', estado='$edo' WHERE idDatosFacturacion='$idDir' ");
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");	
+}
+
+/*  ===============================     Cambiar el status de Datos envio     ==========================   */
+function cambiarStatusRFC($id,$status){
+	$consulta=("UPDATE datosfacturacion set status='$status' where idDatosFacturacion='$id'");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
+	header("Location: ./index.php");	
+}
+
+
 /*  =======================================================================================   */
 /*  ===============================     Tabla de Datos envio     ==========================   */
 /*  =======================================================================================   */
@@ -210,9 +269,7 @@ function infoTablaDireccion(){
 	}
 }
 
-/*  =======================================================================================   */
-/*  ===============================     Tabla de Datos envio     ==========================   */
-/*  =======================================================================================   */
+/*  ===============================     Formulario para nuevos Datos envio     ==========================   */
 function displayNewEnvio(){	
 	echo('<form role="form" name="formNuevoEnvio" style="width:400px; margin: 0 auto;">');		
 
@@ -229,8 +286,43 @@ function displayNewEnvio(){
 	echo('</form>');
 }
 
+/*  ===============================     Agregar nuevos Datos envio     ==========================   */
 function addEnvio($dir, $calle, $muni, $dele, $edo, $cp){
 	$consulta = ("INSERT into direccioncliente values (0, '$dir', '$calle', '$muni', '$dele', '$edo', 'Mexico', '$cp', '".$_SESSION["logged_cliente"]."','A' )");	
 	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");	
+}
+
+/*  ===============================     Formulario para acutalizar Datos envio     ==========================   */
+function displayUpdEnvio($id){		
+	echo('<form role="form" name="formEnvio" style="width:400px; margin: 0 auto;">');		
+		$conDatos = mysql_query("SELECT * FROM direccioncliente WHERE idDireccion='$id'");
+		while ($infoDatos = mysql_fetch_array($conDatos)) {			
+			echo('<input type="text" value ="'.$infoDatos["direccion"].'" required name="direccion" placeholder="Direccion de Envio" class="form-control" ><br>
+			<input type="text" value ="'.$infoDatos["calle"].'" required name="calle" placeholder="Calle" class="form-control" ><br>
+			<input type="text" value ="'.$infoDatos["municipio"].'" required name="muni" placeholder="Municipio" class="form-control" ><br>
+			<input type="text" value ="'.$infoDatos["delegacion"].'" name="delegacion" placeholder="Delegacion" class="form-control" ><br>');
+			estadosListUp($infoDatos["estado"]);
+			echo('<input type="text" value ="'.$infoDatos["cp"].'" required name="cp" placeholder="Codigo Postal" class="form-control" ><br>
+			<input type="hidden" name="idUPD" value ="'.$infoDatos["idDireccion"].'">
+			<input type="hidden" name="upd" value="">');		
+
+			echo('<button class="btn btn-primary" onclick="updDirEnvio()">Actualizar</button>');			
+		}
+
+	echo('</form>');	
+}
+
+/*  ===============================     Actualizar Datos envio     ==========================   */
+function updEnvio($idDir, $dir, $calle, $muni, $delegacion, $edo, $cp){
+	$consulta = ("UPDATE direccioncliente set direccion='$dir', calle='$calle', municipio='$muni', delegacion='$delegacion', estado='$edo', cp='$cp' WHERE idDireccion='$idDir' ");		
+	@mysql_query($consulta) or die ("No se puede ejecutar la acccion añadir el cliente".$consulta);
+	header("Location: ./index.php");	
+}
+
+/*  ===============================     Cambiar el status de Datos envio     ==========================   */
+function cambiarStatus($id,$status){
+	$consulta=("UPDATE direccioncliente set status='$status' where idDireccion='$id'");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
 	header("Location: ./index.php");	
 }

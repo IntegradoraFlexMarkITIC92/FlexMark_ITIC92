@@ -19,7 +19,8 @@ if (!isset($_SESSION["logged_cliente"])){
     if($_REQUEST["op"]=="Out"){
          session_destroy(); // destruyo la sesión 
            header("Location: /FM/");
-   }    
+   } 
+
    if(!is_null($_REQUEST["nuevoEnvio"]) && $_REQUEST["nuevoEnvio"] == "ADD"){
       $dir = $_REQUEST["direccion"];
       $calle = $_REQUEST["calle"];
@@ -30,6 +31,24 @@ if (!isset($_SESSION["logged_cliente"])){
 
       addEnvio($dir, $calle, $muni, $dele, $edo, $cp);
    }
+
+   if(!is_null($_REQUEST["upd"]) && $_REQUEST["upd"] == "UPD"){
+      $dir = $_REQUEST["direccion"];
+      $calle = $_REQUEST["calle"];
+      $muni = $_REQUEST["muni"];
+      $delegacion = $_REQUEST["delegacion"];
+      $edo = $_REQUEST["estadosList"];
+      $cp = $_REQUEST["cp"];
+      $idDir = $_REQUEST["idUPD"];
+
+      updEnvio($idDir, $dir, $calle, $muni, $delegacion, $edo, $cp);
+
+   }
+
+
+    if(!is_null($_REQUEST['STATUS']) && $_REQUEST['STATUS']!="" && !is_null($_REQUEST['IDE']) && $_REQUEST['IDE']!=""){      
+      cambiarStatus($_REQUEST['IDE'],$_REQUEST['STATUS']);
+    }
 
 
 }
@@ -80,7 +99,11 @@ if (!isset($_SESSION["logged_cliente"])){
       $(document).ready(function(){
         $("#open").click(function(){
           $('#modal_id2').modal('show');
-        });        
+        });  
+
+        $("#Cancel").click(function(){
+          $(window).attr('location', 'index.php');
+        });
       });      
     </script>
     <!--javascript modal--> 
@@ -120,7 +143,7 @@ if (!isset($_SESSION["logged_cliente"])){
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel"> Nuevo direccion de envio </h4>
+                    <h4 class="modal-title" id="myModalLabel"> Nueva direccion de envio </h4>
                   </div>
                   <div class="modal-body">
                     <!--Aqui va la funcion de registro a clientes-->
@@ -135,25 +158,31 @@ if (!isset($_SESSION["logged_cliente"])){
             </div>
             <!-- termina cuadro modal acceso usaurios -->
 
-
-            <!-- Inicia Tabla responsive-->
-            <div class="table-responsive">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <!--<th>idEmpresa</th>-->
-                    <th>Direccion</th>
-                    <th>Estado</th>                   
-                    <th>Status</th>                      
-                    <th>Modificar</th>
-                    <th>Baja</th>     
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php infoTablaDireccion();  ?>
-                </tbody>
-              </table>
-            </div>
+            <?php
+            if(!is_null($_REQUEST['ID'])){
+              echo('<button class="btn btn-danger" id="Cancel">Cancelar</button><br><br><br>');
+              displayUpdEnvio($_REQUEST['ID']);
+            }else{
+            ?>
+              <!-- Inicia Tabla responsive-->
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <!--<th>idEmpresa</th>-->
+                      <th>Direccion</th>
+                      <th>Estado</th>                   
+                      <th>Status</th>                      
+                      <th>Modificar</th>
+                      <th>Baja</th>     
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php infoTablaDireccion();  ?>
+                  </tbody>
+                </table>
+              </div>
+            <?php } ?>
 
 
           </div>

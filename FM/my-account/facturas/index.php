@@ -20,15 +20,35 @@ if (!isset($_SESSION["logged_cliente"])){
          session_destroy(); // destruyo la sesión 
            header("Location: /FM/");
    }    
-   if(!is_null($_REQUEST["updCli"]) && $_REQUEST["updCli"] == "UPD"){
-      $nom = $_REQUEST["nombre"];
-      $ape = $_REQUEST["apellido"];
-      $tit = $_REQUEST["titulo"];
-      $user = $_REQUEST["user"];
-      $pass = $_REQUEST["pass"];
+   
+   if(!is_null($_REQUEST["nuevo"]) && $_REQUEST["nuevo"] == "ADD"){
+      $rs = $_REQUEST["razonSocial"];
+      $rfc = $_REQUEST["rfc"];
+      $dir = $_REQUEST["dir"];
+      $muni = $_REQUEST["municipio"];
+      $edo = $_REQUEST["estadosList"];
+      $cp = $_REQUEST["cp"];
 
-      updateCliente($nom, $ape, $tit, $pass);      
+      addRFC($rs, $rfc, $dir, $muni, $edo, $cp);
    }
+
+   if(!is_null($_REQUEST["upd"]) && $_REQUEST["upd"] == "UPD"){
+      $rs = $_REQUEST["razonSocial"];
+      $rfc = $_REQUEST["rfc"];
+      $dir = $_REQUEST["dir"];
+      $muni = $_REQUEST["municipio"];
+      $edo = $_REQUEST["estadosList"];
+      $cp = $_REQUEST["cp"];
+      $idDir = $_REQUEST["idUpd"];
+
+      updRFC($idDir, $rs, $rfc, $dir, $muni, $edo, $cp);
+
+   }
+
+
+    if(!is_null($_REQUEST['STATUS']) && $_REQUEST['STATUS']!="" && !is_null($_REQUEST['IDE']) && $_REQUEST['IDE']!=""){      
+      cambiarStatusRFC($_REQUEST['IDE'],$_REQUEST['STATUS']);
+    }
 
 
 }
@@ -71,6 +91,22 @@ if (!isset($_SESSION["logged_cliente"])){
     <!-- Validacion usuario-->
     <script src="/FM/requiere/js/scriptFront.js"></script>
 
+    <!-- jquery -->
+    <script type="text/javascript" src="/FM/js/jquery.js"></script>
+
+    <!--javascript modal-->
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#open").click(function(){
+          $('#modal_id2').modal('show');
+        });  
+
+        $("#Cancel").click(function(){
+          $(window).attr('location', 'index.php');
+        });
+      });      
+    </script>
+    <!--javascript modal--> 
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -96,25 +132,55 @@ if (!isset($_SESSION["logged_cliente"])){
           <div class="col-lg-12">
             <!--Inicia el contenido de la web de administrador-->
             <h1 class="page-header">Datos de Facturas</h1>
+            <strong>Nuevo RFC</strong>
+            <button class="btn btn-success btn-md" data-toggle="modal" href="#" id="open"> Nuevo! </button>            
 
-            <!-- Inicia Tabla responsive-->
-            <div class="table-responsive">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <!--<th>idEmpresa</th>-->
-                    <th>RFC</th>
-                    <th>Estado</th>                   
-                    <th>Status</th>                      
-                    <th>Modificar</th>
-                    <th>Baja</th>     
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php infoTablaDF();  ?>
-                </tbody>
-              </table>
+            <!-- inicia cuadro modal acceso usaurios -->
+            <div class="modal fade" id="modal_id2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel"> Nuevo RFC </h4>
+                  </div>
+                  <div class="modal-body">
+                    <!--Aqui va la funcion de registro a clientes-->
+                    <?php displayNewRFC();  ?>
+                    <!--Aqui va la funcion de registro a clientes-->
+                  </div>
+                  <div class="modal-footer">
+                            
+                  </div>
+                </div>
+              </div>
             </div>
+            <!-- termina cuadro modal acceso usaurios -->
+
+            <?php
+            if(!is_null($_REQUEST['ID'])){
+              echo('<button class="btn btn-danger" id="Cancel">Cancelar</button><br><br><br>');
+              displayUpdRFC($_REQUEST['ID']);
+            }else{
+            ?>
+              <!-- Inicia Tabla responsive-->
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <!--<th>idEmpresa</th>-->
+                      <th>RFC</th>
+                      <th>Estado</th>                   
+                      <th>Status</th>                      
+                      <th>Modificar</th>
+                      <th>Baja</th>     
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php infoTablaDF();  ?>
+                  </tbody>
+                </table>
+              </div>
+            <?php } ?>
 
 
           </div>
