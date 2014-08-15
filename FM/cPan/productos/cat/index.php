@@ -57,6 +57,35 @@ if (!isset($_SESSION["logged_adm"])){
 
     }
 
+    if ($_POST["action"] == "upload") {
+      $id=$_REQUEST['imgID'];
+      $tamano = $_FILES["archivo"]['size'];
+      $tipo = $_FILES["archivo"]['type'];
+      $archivo = $_FILES["archivo"]['name'];
+      $trozos = explode(".", $archivo); 
+      $extension = end($trozos);
+      if ($archivo != "") {
+        
+        $dirDown="../../../";
+        $dirID="imgUpload/imgCat/".$id."/";
+        
+        $dirValidar=$dirDown."".$dirID;                
+        
+        if(!is_dir($dirValidar)){
+          mkdir($dirValidar, 0700);
+        }
+
+        $nombreArchivo="imgCat_ID".$id.".".$extension;
+
+
+        $destinocompleto=$dirValidar."".$nombreArchivo;
+        copy($_FILES['archivo']['tmp_name'], $destinocompleto);
+
+        $destinoBD=$dirID.$nombreArchivo;
+        updateDirCat($id,$destinoBD);
+      }
+    }
+
 
 }
 
@@ -90,6 +119,9 @@ if (!isset($_SESSION["logged_adm"])){
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/FM/include/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script type="text/javascript" src="/FM/js/jquery.js"></script>
+    <script type="text/javascript" src="/FM/js/bootstrap-filestyle.min.js"> </script>
 
     <script type="text/javascript" src="/FM/js/jquery.js"></script>
     <script type="text/javascript">
@@ -133,6 +165,7 @@ if (!isset($_SESSION["logged_adm"])){
       		<th>Tipo</th>      		      		
       		<th>Cat. Superior</th>          
           <th>Status</th>
+          <th>Imagen</th>
           <th>Modificar</th>
           <th>Baja</th>
     		</tr>
@@ -152,6 +185,10 @@ if (!isset($_SESSION["logged_adm"])){
         displayNewCat();
     }else if (!is_null($_REQUEST['ID'])) {
         displayUpdCat($_REQUEST['ID']);
+    }
+
+    if(!is_null($_REQUEST['imgID'])){
+      displayImgCategoria();
     }
 
     ?>

@@ -377,6 +377,7 @@ function infoTablaCat(){
 			   	}
 			   echo('<td>'.$infoCat["NombrePadre"].'</td>			   
 			   <td>'.$infoCat["status"].'</td>
+			   <td><a href="index.php?imgID='.$infoCat["idCategoria"].'"><button type="button" class="btn btn-success">Subir</button></a></td>
 			   <td><a href="index.php?ID='.$infoCat["idCategoria"].'"><button type="button" class="btn btn-warning">Modificar</button></a></td>');
 		if($infoCat["status"]=="A"){
 			   echo('<td><a href="index.php?STATUS=D&IDE='.$infoCat["idCategoria"].'"><button type="button" class="btn btn-danger">Baja</button></a></td>');
@@ -479,6 +480,24 @@ function cambiarStatusCat($id,$status){
 	header("Location: ./index.php");	
 }
 
+/*  ====================  Formulario para subir imagen de la categoria   ====================   */
+function displayImgCategoria(){
+	echo('<form role="form" name="formImg" action="" method="post" enctype="multipart/form-data" style="width:400px; margin: 0 auto;">');
+	echo('		
+		<input name="archivo" id="archivo" type="file" class="filestyle" data-buttonName="btn-primary">
+		<input name="enviar" class="btn btn-primary" type="submit" id="enviar" value="Upload File" />
+		<input name="action" type="hidden" value="upload">
+		');
+	echo("</form>");
+
+}
+
+/*  ====================  Funcion para actualizar la informacion en la BD de la ruta de la imagen   ====================   */
+function updateDirCat($id,$url){
+	$consulta=("UPDATE categoria set imgUrl='$url' WHERE idCategoria='$id'");
+	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
+	header("Location: ./index.php");
+}
 
 /*  =======================================================================================   */
 /*  ====================  Tabla de productos   ====================   */

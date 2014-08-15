@@ -326,3 +326,42 @@ function cambiarStatus($id,$status){
 	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);	
 	header("Location: ./index.php");	
 }
+function categotiasView(){
+	$conDatos = mysql_query("SELECT * FROM categoria WHERE nivelCategoria='1' ");
+	while ($infoDatos = mysql_fetch_array($conDatos)) {
+		echo('<div class="col-xs-5 col-md-3">
+				<div class="thumbnail">								
+    				<a href="index.php?ctp='.$infoDatos["idCategoria"].'" class="thumbnail">');                				
+        			if($infoDatos["imgUrl"]==NULL){
+						echo('<img src="/FM/imgUpload/noimage.jpg'.$infoDatos["imgUrl"].'" value="'.$infoDatos["idCategoria"].'" alt="img..">');
+					}else{
+        				echo('<img src="/FM/'.$infoDatos["imgUrl"].'" value="'.$infoDatos["idCategoria"].'" alt="img..">');
+        			}
+    				echo('</a>
+    				<div class="caption">');									
+							echo('<p>'.$infoDatos["nombreCategoria"].'</p>');
+				    echo('</div>
+    			</div>
+		</div>');
+	}
+}
+
+function catHijas($idPadre){	
+	$conDatos = mysql_query("SELECT * FROM categoria WHERE idCatPadre='$idPadre' ");
+	while ($infoDatos = mysql_fetch_array($conDatos)) {
+		echo('<div class="col-xs-5 col-md-3">
+				<div class="thumbnail">								
+    				<a href="./pdc/index.php?scth='.$infoDatos["idCategoria"].'" class="thumbnail">');
+					if($infoDatos["imgUrl"]==NULL){
+						echo('<img src="/FM/imgUpload/noimage.jpg'.$infoDatos["imgUrl"].'" value="'.$infoDatos["idCategoria"].'" alt="img..">');
+					}else{
+        				echo('<img src="/FM/'.$infoDatos["imgUrl"].'" value="'.$infoDatos["idCategoria"].'" alt="img..">');
+        			}
+    				echo('</a> 
+    				<div class="caption">');									
+							echo('<p>'.$infoDatos["nombreCategoria"].'</p>');
+				    echo('</div>
+    			</div>
+		</div>');
+	}
+}

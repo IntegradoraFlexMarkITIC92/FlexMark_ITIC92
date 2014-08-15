@@ -1,44 +1,44 @@
 <?php
-include("conn.php"); 
+include("conn.php");
 //  ================= Funcion que crea el menu del Front =========================
-function menuFront(){ ?>	
+function menuFront(){ ?>    
 
-	    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	    	<div class="container">
-	        	<div class="navbar-header">
-	          		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-	            		<span class="sr-only">xD</span>
-	            		<span class="icon-bar"></span>
-	            		<span class="icon-bar"></span>
-	            		<span class="icon-bar"></span>
-	          		</button> 
-	          		<?php 
-	          		$conEmp= mysql_query("SELECT idConfiguracion FROM empresa WHERE idEmpresa='1'");
-			  		while ($infoEmp=mysql_fetch_array($conEmp)) {
-			  			$idConfiguracion=$infoEmp["idConfiguracion"];
-			  			$conConf=mysql_query("SELECT logo FROM confgral WHERE idConfiguracion='$idConfiguracion'");
-			  			while ($infoConf=mysql_fetch_array($conConf)) {
-			  				$ruta=$infoConf["logo"];
-			  			}
-			  		}
-	          		?>
-	          		<a class="navbar-brand" href="index.php"><img src=<?php echo('"/FM/'.$ruta.'"');?> height="120%" width="100%"></a>
-	        	</div>	        		          	
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">xD</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button> 
+                    <?php
+                    $conEmp= mysql_query("SELECT idConfiguracion FROM empresa WHERE idEmpresa='1'");
+                    while ($infoEmp=mysql_fetch_array($conEmp)) {
+                        $idConfiguracion=$infoEmp["idConfiguracion"];
+                        $conConf=mysql_query("SELECT logo FROM confgral WHERE idConfiguracion='$idConfiguracion'");
+                        while ($infoConf=mysql_fetch_array($conConf)) {
+                            $ruta=$infoConf["logo"];
+                        }
+                    }
+                    ?>
+                    <a class="navbar-brand" href="index.php"><img src= <?php echo('"/FM/'.$ruta.'"');?> height="120%" width="100%"></a>
+                </div>  
 
-	          		<?php if (($_SESSION["logged_cliente"])){ ?>
+                    <?php if (($_SESSION["logged_cliente"])){ ?>
 
                         <ul class="nav navbar-top-links navbar-right">                                                       
                             <li class="dropdown">                                
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <?php 
-                                    
+                                    <?php
+
                                         $conNom = mysql_query('SELECT nombre, apellido FROM cliente where idCliente="'.$_SESSION["logged_cliente"].' " ');
                                         if($infoCli=mysql_fetch_array($conNom)){
                                             echo('<span class="glyphicon glyphicon-user"></span>');
                                             echo("&nbsp &nbsp".$infoCli["nombre"]." ".$infoCli["apellido"]);
                                         }
-                                    
-                                    ?>                                    
+                                        
+                                    ?>
                                 </a>                                
                                 <ul class="dropdown-menu dropdown-messages">
                                     <li>
@@ -53,75 +53,58 @@ function menuFront(){ ?>
                             </li>
                             <!-- /.dropdown -->
                         </ul>
-
-		          		<!-- <ul class="nav pull-right">
-	          				<li class="dropdown" id="menuUser">
-	            				<a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogout">
-	            					<?php
-	            					#$conNom = mysql_query('SELECT nombre, apellido FROM cliente where idCliente="'.$_SESSION["logged_cliente"].' " ');
-	            					#if($infoCli=mysql_fetch_array($conNom)){
-	            						#echo('<span class="glyphicon glyphicon-user"></span>');
-	            						#echo("&nbsp &nbsp".$infoCli["nombre"]." ".$infoCli["apellido"]);
-	            					#}
-	            					?>
-	            				</a>
-	            				<div class="dropdown-menu" style="padding:17px;">
-	              					<form class="form-signin" role="form" name="logout" id="formLogout">	              						
-	        							<center><a href="index.php?op=Out">LogOut</a></center>
-	              					</form>
-	            				</div>
-	          				</li>
-	        	  		</ul> -->
-
-	        	  	<?php }else{ ?>
-
-		          		<ul class="nav navbar-top-links navbar-right">
-	          				<li class="dropdown" id="menuLogin">
-	            				<a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin"><span class="glyphicon glyphicon-user"></span></a>
-	            				<div class="dropdown-menu" style="padding:17px;">
-	              					<form class="form-signin" role="form" name="login" id="formLogin">
-	              						<h3 class="form-signin-heading"> Acceso </h3>
-	                					<input type="input" name="user" class="form-control" placeholder="Usuario" required autofocus><br>
-	        							<input type="password" name="pass" class="form-control" placeholder="Contraseña" required><br>         							
-	        							<input type="hidden" name="conn" value="">
-	        							<button class="btn btn-primary btn-block" type="submit" onclick="validarCliente()">Iniciar Sesion</button>
-	              					</form>
-	            				</div>
-	          				</li>	          					          				
-	        	  		</ul>
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li class="dropdown" id="categorias">
+                                <a class="dropdown-toggle" href="/FM/catP/index.php" id="categorias">Categoria</a>
+                            </li>
+                        </ul>
+                    <?php }else{ ?>
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li class="dropdown" id="menuLogin">
+                                <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin"><span class="glyphicon glyphicon-user"></span></a>
+                                <div class="dropdown-menu" style="padding:17px;">
+                                    <form class="form-signin" role="form" name="login" id="formLogin">
+                                        <h3 class="form-signin-heading"> Acceso </h3>
+                                        <input type="input" name="user" class="form-control" placeholder="Usuario" required autofocus><br>
+                                        <input type="password" name="pass" class="form-control" placeholder="Contraseña" required><br>                                  
+                                        <input type="hidden" name="conn" value="">
+                                        <input type="hidden" name="uD" value="">
+                                        <button class="btn btn-primary btn-block" type="submit" onclick="validarCliente()">Iniciar Sesion</button>
+                                    </form>
+                                </div>
+                            </li>                                                       
+                        </ul>
                         <div class="navbar-collapse collapse">
-    	        	  		<ul class="nav navbar-top-links navbar-right">
-    	        	  			<li class="dropdown" id="registrar">
-    	          					<a class="dropdown-toggle" href="#" id="registrar" data-toggle="dropdown" id="navLogin">Registrar</a>
-    	          				</li>
-    	        	  		</ul>
+                            <ul class="nav navbar-top-links navbar-right">
+                                <li class="dropdown" id="registrar">
+                                    <a class="dropdown-toggle" href="#" id="registrar" data-toggle="dropdown" id="navLogin">Registrar</a>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-top-links navbar-right">
+                                <li class="dropdown" id="categorias">
+                                    <a class="dropdown-toggle" href="/FM/catP/index.php" id="categorias">Categoria</a>
+                                </li>
+                            </ul>                                                
                         </div>
-	        	  	<?php } ?>
-	    	</div>
-	    </div>	    
-
+                    <?php } ?>
+            </div>
+        </div>
 <?php
-
 }
-
-?>
-
-<?php 
-
 //======================================== Termina funcion menuFront() =================================
 
 function nav($active){ ?>
-	
-	<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </button>
+            </button>           
             <a class="navbar-brand" href="/index.php">
-            <?php                 
+            <?php
                 $conEmp= mysql_query("SELECT idConfiguracion FROM empresa WHERE idEmpresa='1'");
                     while ($infoEmp=mysql_fetch_array($conEmp)) {
                         $idConfiguracion=$infoEmp["idConfiguracion"];
@@ -139,25 +122,44 @@ function nav($active){ ?>
         <ul class="nav navbar-top-links navbar-right">                
                                         
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <?php 
-                                    
-                        $conNom = mysql_query('SELECT nombre, apellido FROM cliente where idCliente="'.$_SESSION["logged_cliente"].' " ');
-                        if($infoCli=mysql_fetch_array($conNom)){
-                            echo('<span class="glyphicon glyphicon-user"></span>');
-                            echo("&nbsp".$infoCli["nombre"]." ".$infoCli["apellido"]);
-                            echo('&nbsp<span class="fa fa-caret-down"> </span>');
-                        }
-                                    
-                    ?>                    
-                </a>
-                <ul class="dropdown-menu dropdown-messages">                    
-                    <!-- <li class="divider"></li> -->
-                    <li>
-                        <a href="index.php?op=Out"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                <?php if (($_SESSION["logged_cliente"])){ ?>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <?php
+                            $conNom = mysql_query('SELECT nombre, apellido FROM cliente where idCliente="'.$_SESSION["logged_cliente"].' " ');
+                            if($infoCli=mysql_fetch_array($conNom)){
+                                echo('<span class="glyphicon glyphicon-user"></span>');
+                                echo("&nbsp".$infoCli["nombre"]." ".$infoCli["apellido"]);
+                                echo('&nbsp<span class="fa fa-caret-down"> </span>');
+                            }
+                        ?>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">                    
+                        <!-- <li class="divider"></li> -->
+                        <li>
+                            <a href="index.php?op=Out"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                <?php }else{ ?>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Registrate
+                    </a> 
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span></a> 
+                        <ul class="dropdown-menu dropdown-messages">
+                            <li>
+                                <form class="form-signin" style="width:100px; margin: 0 auto;" role="form" name="login" id="formLogin">
+                                    <h3 class="form-signin-heading"> Acceso </h3>
+                                    <input type="input" name="user" class="form-control" placeholder="Usuario" required autofocus><br>
+                                    <input type="password" name="pass" class="form-control" placeholder="Contraseña" required><br>                                  
+                                    <input type="hidden" name="conn" value="">
+                                    <input type="hidden" name="uD" value="">
+                                    <button class="btn btn-primary btn-block" type="submit" onclick="validarCliente()">Iniciar Sesion</button>
+                                </form>
+                            </li>
+                        </ul> 
                     </li>
-                </ul>
-                <!-- /.dropdown-user -->
+                <?php } ?>
             </li>
             <!-- /.dropdown -->
 
@@ -182,7 +184,7 @@ function nav($active){ ?>
                     </li>
                         
                     <li>
-                        <a <?php if($active=="categoria"){ echo('class="active"'); } ?> href="#"><i class="fa fa-sitemap fa-fw"></i>Productos por Categoria</a>
+                        <a <?php if($active=="categoria"){ echo('class="active"'); } ?> href="/FM/catP/index.php"><i class="fa fa-sitemap fa-fw"></i>Productos por Categoria</a>
                     </li>
 
                     <li>
@@ -206,9 +208,6 @@ function nav($active){ ?>
         </div>
         <!-- /.navbar-static-side -->
     </nav>
-
-<?php 
-
+<?php
 }
-
 ?>
