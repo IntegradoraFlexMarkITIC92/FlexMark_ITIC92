@@ -530,15 +530,15 @@ function displayNewPro(){
 	echo('<form role="form" name="formNuevoPro" style="width:400px; margin: 0 auto;">');
 		echo('<h3>Nuevo Producto</h3>');
 
-		echo('<input type="text" name="descripcionCorta" placeholder="Descripcion del Titulo" class="form-control" ><br>
-		<textarea name="descripcion" placeholder="Escriba sus comentarios" class="form-control"></textarea><br>			
+		echo('<input type="text" required name="descripcionCorta" placeholder="Descripcion del Titulo" class="form-control" ><br>
+		<textarea required name="descripcion" placeholder="Escriba sus comentarios" class="form-control"></textarea><br>			
 		<input type="text" name="noParte" placeholder="Numero de Parte" class="form-control" ><br>
-		<input type="text" name="precio" placeholder="Precio del Producto" class="form-control" ><br>
-		<input type="text" name="existencia" placeholder="Existencia del Producto" class="form-control" ><br>		
-		<input type="text" name="rangoMM" placeholder="Rango Medio Mayoreo" class="form-control" ><br>
-		<input type="text" name="precioMM" placeholder="Precio Medio Mayoreo" class="form-control" ><br>
-		<input type="text" name="rangoMayoreo" placeholder="Rango Mayoreo" class="form-control" ><br>
-		<input type="text" name="precioMayoreo" placeholder="Precio Mayoreo" class="form-control" ><br>');
+		<input required type="text" name="precio" placeholder="Precio del Producto" class="form-control" ><br>
+		<input required type="text" name="existencia" placeholder="Existencia del Producto" class="form-control" ><br>		
+		<input required type="text" name="rangoMM" placeholder="Rango Medio Mayoreo" class="form-control" ><br>
+		<input required type="text" name="precioMM" placeholder="Precio Medio Mayoreo" class="form-control" ><br>
+		<input required type="text" name="rangoMayoreo" placeholder="Rango Mayoreo" class="form-control" ><br>
+		<input required type="text" name="precioMayoreo" placeholder="Precio Mayoreo" class="form-control" ><br>');
 		$conCat= mysql_query("SELECT idCategoria, nombreCategoria FROM categoria WHERE nivelCategoria='1' ");
 		echo('<select name="categoriaPadre" id="categoriaPadre" class="form-control">
 		<option selected="selected" value="0">Seleccione.. </option>');
@@ -695,10 +695,10 @@ function displayImgProductos($idProd){
 }
 
 /*  ====================  Funcion para actualizar la informacion en la BD de la ruta de la imagen   ====================   */
-function updateImgProducto($id,$url){
+function updateImgProducto($id,$url,$location){
 	$consulta=("INSERT INTO imgproductos values ('0','$url',NULL,'$id')");
 	@mysql_query($consulta) or die("No se puede ejecutar la consulta ".$consulta);
-	header("Location: ./index.php");
+	header("Location: ".$Location."");
 }
 
 /*  =======================================================================================   */

@@ -122,8 +122,11 @@ if (!isset($_SESSION["logged_adm"])){
           $destinocompleto=$dirValidar."".$nombreArchivo;
           copy($_FILES['imagenesProducto']['tmp_name'][$i], $destinocompleto);
           
+          $location = $_REQUEST["urlH"];
+
           $destinoBD=$dirID.$nombreArchivo;
-          updateImgProducto($id,$destinoBD);
+          updateImgProducto($id,$destinoBD,$location);
+
 
 
         }
@@ -211,6 +214,10 @@ if (!isset($_SESSION["logged_adm"])){
     <script type="text/javascript" src="/FM/js/jquery.js"></script> 
     <script type="text/javascript">
       $(document).ready(function(){
+
+        var url = document.URL;
+        $("#urlH").val(url);        
+
         $i=0;
         $("#mas").click(function(){
           //alert("Agregas otra");                    
@@ -245,7 +252,7 @@ if (!isset($_SESSION["logged_adm"])){
   <?php menuAdmin(); ?>
 	<!--Inicia el contenido de la web de administrador-->
     <div class="container theme-showcase" role="main">	 
-
+    <input type="hidden" id="urlH" name="urlH" value="">
   <h1>Administracion de Productos</h1>    
   <br>
 	<!-- Inicia Tabla responsive-->

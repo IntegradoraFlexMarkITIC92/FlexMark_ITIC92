@@ -135,8 +135,6 @@ if (!isset($_SESSION["logged_adm"])){
             $("#categoriasPadre").fadeOut('fast')
           }
         });
-
-
         
       });
     </script>

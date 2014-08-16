@@ -94,13 +94,13 @@ function showPromos(){
 /*  =======================================================================================   */
 /*  ====================  Funcion para realizar el login de back-end   ====================   */
 /*  =======================================================================================   */
-function login($user,$pass){			
+function login($user,$pass,$url){			
 	$conClie= mysql_query("SELECT idCliente, count(1) as exist FROM cliente where user='$user' and pass='$pass' and status='A'");
 	while($logi=mysql_fetch_array($conClie)){		
 		if($logi['exist']==1){			
 			$idCliente=$logi['idCliente'];			
-			$_SESSION["logged_cliente"] = $idCliente;	
-			header("Location: /FM/index.php");
+			$_SESSION["logged_cliente"] = $idCliente;				
+			header("Location: ".$url."");
 		}else{
 			echo("Error de login");
 		}			
@@ -364,4 +364,45 @@ function catHijas($idPadre){
     			</div>
 		</div>');
 	}
+}
+
+function prodView($idCat){	 
+  	$conProd = mysql_query("SELECT idProducto, descripcionCorta, precio FROM producto WHERE idCategoria='$idCat'");
+  		while ($infoDatos = mysql_fetch_array($conProd)) {
+  			echo('
+  			<div class="row">
+  				<div class="col-md-2">
+  					<a href="view.php?pctd='.$infoDatos["idProducto"].'">');                				
+			  			$conURL = mysql_query("SELECT url from imgproductos where idProducto='".$infoDatos['idProducto']."' AND predeterminada='S'");
+			  			$infoUrl = mysql_fetch_array($conURL);
+			  			if($infoUrl["url"]==NULL){
+			  				echo('<img class="img-thumbnail" src="/FM/imgUpload/noimage.jpg" alt="no image">	');
+			  			}else{
+			  				echo('<img class="img-thumbnail" src="/FM/'.$infoUrl["url"].'" alt="no image">	');
+			  			}		  					
+		  			echo('</a>
+		  		</div>
+		  		<div class="col-md-6">
+		  			<a href="view.php?pctd='.$infoDatos["idProducto"].'">
+		  				<h3>'.$infoDatos["descripcionCorta"].'</h3>
+		  			</a>
+		  		</div>
+		  		<div class="col-md-4">
+		  			<h4> $'.$infoDatos["precio"].'</h4>');
+		  			if($_SESSION["logged_cliente"]){
+		  				echo('<button type="button" class="btn btn-warning">Comprar</button>');
+		  			}
+	  			echo('</div>
+	  		</div>
+	  		<hr>');
+  			}	  			  					
+}
+
+function infoProducto($idProd){
+	$conProducto = mysql_query("SELECT * FROM producto WHERE idProducto='$idProd'");
+	while ($infoProducto = mysql_fetch_array($conProducto)) {
+		echo('
+			<h1 class="page-header">'.$infoProducto["descripcionCorta"].'</h1>
+		');	
+	}	
 }

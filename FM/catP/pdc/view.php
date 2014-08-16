@@ -89,13 +89,10 @@ include("../../requiereFront/menus/menusFront.php");
         <div class="row">
           <div class="col-lg-12">
             <!--Inicia el contenido de la web de administrador-->
-            <h1 class="page-header">Categorias</h1>                        
             <?php
-            if(is_null($_REQUEST['scth'])){              
-              echo ("<h1>Por favor seleccione una categoria ..</h1>");
-            }else{
-              prodView($_REQUEST['scth']);            
-            }
+            if(!is_null($_REQUEST["pctd"])){
+              infoProducto($_REQUEST["pctd"]);
+            } 
             ?>
           </div>
           <!-- /.col-lg-12 -->

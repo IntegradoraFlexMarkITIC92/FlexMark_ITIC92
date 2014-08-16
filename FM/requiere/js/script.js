@@ -140,7 +140,7 @@ function addPro(){
 	var error="";
 	var form=document.formNuevoPro;
 
-	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.noParte.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
+	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
 		error+="\n -Proporcionar Datos";
 	}
 
@@ -157,7 +157,7 @@ function updPro(){
 	var error="";
 	var form=document.formNuevoPro;
 
-	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.noParte.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
+	if(form.descripcionCorta.value=="" || form.descripcion.value=="" || form.precio.value=="" || form.existencia.value=="" || form.rangoMM.value=="" || form.precioMM.value=="" || form.rangoMayoreo.value=="" || form.precioMayoreo.value==""){
 		error+="\n -Proporcionar Datos";
 	}
 

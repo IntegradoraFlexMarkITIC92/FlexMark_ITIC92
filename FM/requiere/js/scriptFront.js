@@ -2,12 +2,14 @@
 function validarCliente(){
 	var error="";
 	var form=document.login;
+	var url = document.URL;	
 	
 	if(form.user.value=="" || form.pass.value==""){
 		error+="\n -Proporcionar Datos";
 	}
 	if(error==""){
 			form.conn.value="now";
+			form.uD.value =url;
 			form.submit();
 	}
 }
